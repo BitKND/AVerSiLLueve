@@ -1,62 +1,23 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button>Volver</ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="flex-center">
+    <ion-card color="light">
+      <div class="ion-text-center ion-padding">
+       <img src="../../../assets/icon/iconlogin.png" alt="" width="50%">
+      </div>
 
-<ion-content>
-  <div class="card-container">
-    <ion-card>
-      <ion-row>
-        <ion-col size-md="3" size="12" class="ion-padding ion-blue-bkg">
-          
-        </ion-col>
-        <ion-col size-md="9" size="12" class="welcome">
-          <ion-card-header>
-            <ion-card-title> Bienvenidos a AverSiLlueve App </ion-card-title>
-          </ion-card-header>
-
-          <ion-row>
-            <ion-col>
-              <ion-input label ="Email" fill="outline" [(ngModel)]="gEmail" type="email">
-              </ion-input>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col>
-              <ion-input label ="Password" fill="outline" [(ngModel)]="gPassword" type="password" value="">
-              </ion-input>
-            </ion-col>
-          </ion-row>
-
-          <ion-card-content>
-            <ion-button (click)="login()" shape="round" color="primary"> Sign in </ion-button>
-          </ion-card-content>
-
-          <ion-card-content>
-            <ion-button (click)="loginGoogle()" shape="" color="primary"> Sign in with google </ion-button>
-          </ion-card-content>
-
-          <ion-row>
-            <ion-col>
-              <div class="sign-up">
-                <a [routerLink]="['/sign-up']">Registrate!</a>
-              </div>              
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col>
-              <div class="sign-up">
-                <a [routerLink]="['/reset-password']">Reestablecer Contraseña</a>
-              </div>              
-            </ion-col>
-          </ion-row>
-        </ion-col>
-      </ion-row>
+      <ion-card-header>
+        <ion-card-title color="primary">Bienvenidos a AverSiLlueve App </ion-card-title>
+      </ion-card-header>
+    
+        <ion-card-content >
+          <ion-input label="Email" labelPlacement="floating" placeholder="Ingrese su Correo" fill="outline" [(ngModel)]="gEmail" type="email"></ion-input>
+          <ion-input label="Password" labelPlacement="floating" placeholder="Ingrese su Contraseña" fill="outline" [(ngModel)]="gPassword" type="password" value=""></ion-input>
+          <ion-button color="dark" [routerLink]="['/reset-password']" fill="clear" size="full">¿Olvidaste tu contraseña?</ion-button>
+          <ion-button (click)="login()" color="primary" size="full"> Ingresar </ion-button>
+          <button type="button" class="google-sign-in-button" (click)="loginGoogle()">Ingresar con Google</button>
+          <ion-button color="dark" [routerLink]="['/sign-up']" fill="clear" size="full">¿No tienes una cuenta? Registrate Aqui</ion-button> 
+        </ion-card-content>
+      
     </ion-card>
   </div>
 </ion-content>
