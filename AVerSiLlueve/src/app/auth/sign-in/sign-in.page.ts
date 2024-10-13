@@ -58,7 +58,7 @@ export class SignInPage implements OnInit {
       this.roter.navigate(['/tabs']);
 
     } catch (error) {
-      console.log('Ocurrio un error');
+      console.log(error);
     }
 
 
@@ -84,7 +84,7 @@ export class SignInPage implements OnInit {
     }
   }
 
-  async llogin() {
+/*   async llogin() {
     const auth = getAuth();
     signInWithEmailAndPassword(this.oAuth, this.gEmail, this.gPassword)
       .then((userCredential) => {
@@ -99,6 +99,6 @@ export class SignInPage implements OnInit {
         console.log(errorCode);
         console.log(errorMessage);
       });
-  }
+  } */
 
 }

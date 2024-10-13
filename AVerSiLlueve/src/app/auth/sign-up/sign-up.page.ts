@@ -4,6 +4,7 @@ import { AuthenticationService } from 'src/app/authentication.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-sign-up',
@@ -14,21 +15,26 @@ export class SignUpPage implements OnInit {
 
   regForm: FormGroup | undefined;
 
-  oAuth = getAuth();
-
+  
   private _auth = inject(AuthenticationService);
 
   gEmail = "";
   gPassword = "";
 
+  //Declaramos las clases en el constructor que vamos a utilizar acorde a los modulos.
+
   constructor(
+    public alertController: AlertController,
+    //public regForm: FormGroup,
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     private roter : Router,
     public authService:AuthenticationService,
     
-              ) { }
-
+    ) { }
+// Hacemos uso de validadores para establecer patrones a cumplir en el mail y contraseña
+// El patron del mail debe cumplir characters@characters.domain
+// El patron de la contraseña: 8 caracteres, y al menos 1 mayuscula y 1 numero
   ngOnInit() {
     this.regForm = this.formBuilder.group({
       email:['', [
@@ -48,7 +54,10 @@ export class SignUpPage implements OnInit {
   }
 
 
-
+/*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
+  Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
+  En caso de ser valores erroneos, devuelve alerta de aviso
+  Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien*/
   async registerUser(){
 
     const loading = await this.loadingCtrl.create();
@@ -62,7 +71,12 @@ export class SignUpPage implements OnInit {
         loading.dismiss();
         this.roter.navigate(['/tabs']);
       } else{
-        console.log('Ingresar valores correctos');
+        let alert = this.alertController.create({
+          header:'Email o contraseña incorrectos',
+          message:'Email debe ser tipo characters@characters.com. La contraseña debe tener 8 caracteres, y al menos 1 mayuscula y 1 numero ',
+          buttons: ['Entendido']
+
+        })
       }
     
     } catch (error) {
@@ -73,13 +87,16 @@ export class SignUpPage implements OnInit {
     
     
   }
-
+  /*El try catch intenta hacer uso de signinwithgoogle declarado en authenthication service, si es correcto se abre el pop up
+  para elegir la cuenta de google con la cual iniciar sesion.
+  En el caso de algun error, el catch lo atrapa y se muestra por consola que ocurrio un error*/
   async loginGoogle(){
     try {
-      await this._auth.signInWithGoogle();
+      await this.authService.signInWithGoogle();
+      this.roter.navigate(['/tabs']);
 
     } catch (error) {
-      console.log('Ocurrio un error');
+      console.log(error);
     }
   }
 
