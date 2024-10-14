@@ -13,5 +13,139 @@
     </ion-toolbar>
   </ion-header>
 
+  <!-- desde aca ponemos lo del video minuto 5:52-->
+
+  <!-- METODO 1-->
+  <div class="row">
+    <div class="col-md-6">
+      <div card class="card-body">
+        <ion-item>
+          <!-- aca podriamos una imagen -->
+        </ion-item>
+      
+        <br>
+
+        <ion-label class="ion-text-center" color="primary">
+          <h2 class="ion-text-center">CIUDAD #:1</h2>
+        </ion-label>
+
+        <form (submit)="submitLocation1(lat,lon)">
+          <div class="form-group">
+            <input type="text" class="form-group" placeholder="Latitud" #lat>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-group" placeholder="Longitud" #lon>
+          </div>
+          <button class="btn btn-primary btn-block mt-2">Obtener Clima</button>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div *ngIf="proveedor" class="card card-body">
+        <p>Cuidad: {{proveedor.name}}</p>
+        <p>Temperatura: {{proveedor.main.temp}}</p>
+        <p>Temperatura max: {{proveedor.main.temp_max}}</p>
+        <p>Temperatura min: {{proveedor.main.temp_min}}</p>
+        <p>Latitud: {{proveedor.coord.lat}}</p>
+        <p>Longitud: {{proveedor.coord.lon}}</p>
+        <p>Humedad: {{proveedor.main.humidity}}</p>
+        <p>Presion: {{proveedor.main.pressure}}</p>
+        <p>Tipo de clima: {{proveedor.proveedor[0].description}}</p>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <!-- METODO 2-->
+  <div class="row">
+    <div class="col-md-6">
+      <div card class="card-body">
+        <ion-item>
+          <!-- aca podriamos una imagen -->
+        </ion-item>
+      
+        <br>
+
+        <ion-label class="ion-text-center" color="primary">
+          <h2 class="ion-text-center">CIUDAD #:2</h2>
+        </ion-label>
+
+        <form (submit)="submitLocation2(cityName,stateCode,countryCode)">
+          <div class="form-group">
+            <input type="text" class="form-group" placeholder="Nombre de la Cuidad" #cityName>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-group" placeholder="Codigo de Pais" #stateCode>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-group" placeholder="Codigo de Pais" #countryCode>
+          </div>          
+          <button class="btn btn-primary btn-block mt-2">Obtener Clima</button>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div *ngIf="proveedor2" class="card card-body">
+        <p>Cuidad: {{proveedor2.name}}</p>
+        <p>Temperatura: {{proveedor2.main.temp}}</p>
+        <p>Temperatura max: {{proveedor2.main.temp_max}}</p>
+        <p>Temperatura min: {{proveedor2.main.temp_min}}</p>
+        <p>Latitud: {{proveedor2.coord.lat}}</p>
+        <p>Longitud: {{proveedor2.coord.lon}}</p>
+        <p>Humedad: {{proveedor2.main.humidity}}</p>
+        <p>Presion: {{proveedor2.main.pressure}}</p>
+        <p>Tipo de clima: {{proveedor2.proveedor2[0].description}}</p>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <!-- METODO 3-->
+  <div class="row">
+    <div class="col-md-6">
+      <div card class="card-body">
+        <ion-item>
+          <!-- aca podriamos una imagen -->
+        </ion-item>
+      
+        <br>
+
+        <ion-label class="ion-text-center" color="primary">
+          <h2 class="ion-text-center">CIUDAD #:1</h2>
+        </ion-label>
+
+        <form (submit)="submitLocation3(lat,lon)">
+          <div class="form-group">
+            <input type="text" class="form-group" placeholder="Latitud" #lat>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-group" placeholder="Longitud" #lon>
+          </div>
+          <button class="btn btn-primary btn-block mt-2">Obtener Clima</button>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div *ngIf="proveedor3" class="card card-body">
+        <p>Cuidad: {{proveedor3.name}}</p>
+        <p>Temperatura: {{proveedor3.main.temp}}</p>
+        <p>Temperatura max: {{proveedor3.main.temp_max}}</p>
+        <p>Temperatura min: {{proveedor3.main.temp_min}}</p>
+        <p>Latitud: {{proveedor3.coord.lat}}</p>
+        <p>Longitud: {{proveedor3.coord.lon}}</p>
+        <p>Humedad: {{proveedor3.main.humidity}}</p>
+        <p>Presion: {{proveedor3.main.pressure}}</p>
+        <p>Tipo de clima: {{proveedor3.proveedor3[0].description}}</p>
+      </div>
+    </div>
+  </div>
+  <!-- hasta aca aca ponemos lo del video minuto 5:52-->
+
   <app-explore-container name="Tab 1 page"></app-explore-container>
 </ion-content>
