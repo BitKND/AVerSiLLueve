@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/authentication.service';
+import { AuthenticationService } from 'src/app/auth/services/authServices/authentication.service';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class SignInPage implements OnInit {
   private _auth = inject(AuthenticationService);
 
   constructor(
+    private alert: AlertController,
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     private roter : Router,
@@ -51,6 +53,9 @@ export class SignInPage implements OnInit {
     })
   }
 
+    /*El try catch intenta hacer uso de signinwithgoogle declarado en authenthication service, si es correcto se abre el pop up
+  para elegir la cuenta de google con la cual iniciar sesion.
+  En el caso de algun error, el catch lo atrapa y se muestra por consola que ocurrio un error*/
   async loginGoogle() {
     try {
       await this._auth.signInWithGoogle();
@@ -63,6 +68,21 @@ export class SignInPage implements OnInit {
 
 
   }
+  async alertaBasica(){
+
+    const alert = await this.alert.create({
+      header: 'Email o contraseña incorrectos',
+      message: 'Por favor ingrese un email o contraseña validos',
+      buttons: ['Entendido'],
+
+    });
+    await alert.present();
+  }
+
+  /*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
+  Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
+  En caso de ser valores erroneos, devuelve alerta de aviso
+  Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien*/
   async login(){
     const loading = await this.loadingCtrl.create();
     await loading.present();
@@ -75,11 +95,12 @@ export class SignInPage implements OnInit {
         loading.dismiss();
         this.roter.navigate(['/tabs']);
       } else{
-        console.log('Ingresar valores correctos');
+        this.alertaBasica();
       }
     
     } catch (error) {
       console.log(error);
+      this.alertaBasica();
       loading.dismiss();
     }
   }

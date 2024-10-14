@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { AuthenticationService } from 'src/app/authentication.service';
+import { AuthenticationService } from 'src/app/auth/services/authServices/authentication.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
@@ -24,7 +24,7 @@ export class SignUpPage implements OnInit {
   //Declaramos las clases en el constructor que vamos a utilizar acorde a los modulos.
 
   constructor(
-    public alertController: AlertController,
+    public alert: AlertController,
     //public regForm: FormGroup,
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
@@ -54,6 +54,17 @@ export class SignUpPage implements OnInit {
   }
 
 
+  async alertaBasica(){
+
+    const alert = await this.alert.create({
+      header: 'Email o contraseña incorrectos',
+      message: 'Email debe ser tipo characters@characters.com. La contraseña debe tener 8 caracteres, y al menos 1 mayuscula y 1 numero',
+      buttons: ['Entendido'],
+
+    });
+    await alert.present();
+  }
+
 /*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
   Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
   En caso de ser valores erroneos, devuelve alerta de aviso
@@ -71,16 +82,12 @@ export class SignUpPage implements OnInit {
         loading.dismiss();
         this.roter.navigate(['/tabs']);
       } else{
-        let alert = this.alertController.create({
-          header:'Email o contraseña incorrectos',
-          message:'Email debe ser tipo characters@characters.com. La contraseña debe tener 8 caracteres, y al menos 1 mayuscula y 1 numero ',
-          buttons: ['Entendido']
-
-        })
+        this.alertaBasica();
       }
     
     } catch (error) {
       console.log(error);
+      this.alertaBasica();
       loading.dismiss();
     }
 
