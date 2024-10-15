@@ -1,22 +1,19 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button>Volver</ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-<ion-content>
-  <div class="card-container">
-    <ion-card>
-      <ion-row>
-        <ion-col size-md="2" size="3" class="ion-padding ion-blue-bkg">
-          <img
-            src="https://images.prismic.io/ionicframeworkcom/ac68e1d9-9887-4e5a-9820-9290d06638de_ionic+logo+white+on+blue.png"
-            alt="Ionic logo" loading="lazy" />
-        </ion-col>
-        <ion-col size-md="9" size="12" class="welcome">
+
+
+<ion-content [fullscreen]="true">
+  <div class="flex-center">
+    <ion-card color="light">
+      <div class="ion-text ion-padding">
+        <a href="http://localhost:8100/sign-in">
+          <ion-icon name="arrow-back-circle-outline" size="large"></ion-icon>
+        </a>
+      </div>
+      <div  class="ion-text-center ion-padding">
+        <img src="../../../assets/icon/iconlogin.png" alt="" width="50%">
+      </div>
+      <ion-card-content>
           <ion-card-header>
-            <ion-card-title> Registrate! </ion-card-title>
+            <ion-card-title color="primary"> Registrate! </ion-card-title>
           </ion-card-header>
 
 <!--           <ion-row>
@@ -32,30 +29,23 @@
               </ion-input>
             </ion-col>
           </ion-row> -->
-
-          <ion-row>
-            <ion-col>
-              <ion-input label="Email" fill="outline" [(ngModel)]="gEmail" type="email">
-              </ion-input>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col>
-              <ion-input label="Password" fill="outline" [(ngModel)]="gPassword" type="password" value="">
-              </ion-input>
-            </ion-col>
-          </ion-row>
-
-          <ion-card-content>
-            <ion-button (click)="registerUser()" shape="round" color="primary"> Registrarse </ion-button>
-          </ion-card-content>
-
-          <ion-card-content>
-            <ion-button (click)="loginGoogle()" shape="" color="primary"> Sign in with google </ion-button>
-          </ion-card-content>
-        </ion-col>
-      </ion-row>
+          
+              <ion-row>
+                <ion-col>
+                  <ion-input [(ngModel)]="gEmail" label="Email" labelPlacement="floating" placeholder="Ingrese mail" fill="outline"  type="email"></ion-input>
+                </ion-col>
+              </ion-row>
+              
+              <ion-row>
+                <ion-col>
+                  <ion-input [(ngModel)]="gPassword" label="Contraseña" labelPlacement="floating" placeholder="Ingrese contraseña" fill="outline"  type="password" value=""></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-button (click)="registerUser()" expand="block" color="primary"> Registrarse </ion-button>
+              <div class="ion-text-center">
+                <ion-button (click)="loginGoogle()" expand="block" color="primary"> Registrate con google </ion-button>
+              </div>
+      </ion-card-content>
     </ion-card>
   </div>
 </ion-content>
