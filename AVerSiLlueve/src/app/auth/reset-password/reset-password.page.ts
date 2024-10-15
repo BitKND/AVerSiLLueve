@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/auth/services/authServices/authentication.service';
+import { AuthenticationService } from 'src/app/services/authServices/authentication.service';
 
 @Component({
   selector: 'app-reset-password',

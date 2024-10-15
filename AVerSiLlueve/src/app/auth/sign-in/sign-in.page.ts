@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/auth/services/authServices/authentication.service';
+import { AuthenticationService } from 'src/app/services/authServices/authentication.service';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { environment } from 'src/environments/environment';
@@ -60,7 +60,7 @@ export class SignInPage implements OnInit {
     try {
       await this._auth.signInWithGoogle();
 
-      this.roter.navigate(['/tabs']);
+      this.roter.navigate(['/tabs/tab2']);
 
     } catch (error) {
       console.log(error);
@@ -76,7 +76,7 @@ export class SignInPage implements OnInit {
       buttons: ['Entendido'],
 
     });
-    await alert.present();
+     alert.present();
   }
 
   /*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
@@ -93,7 +93,7 @@ export class SignInPage implements OnInit {
 
       if(user){
         loading.dismiss();
-        this.roter.navigate(['/tabs']);
+        this.roter.navigate(['/tabs/tab2']);
       } else{
         this.alertaBasica();
       }

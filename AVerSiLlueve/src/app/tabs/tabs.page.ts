@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../auth/services/authServices/authentication.service';
+import { AuthenticationService } from '../services/authServices/authentication.service';
 import { Router } from '@angular/router';
 
 import { ProveedorClimaService } from '../services/proveedoresServices/proveedor-clima.service';
@@ -11,7 +11,7 @@ import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedo
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss']
 })
-export class TabsPage implements OnInit{
+export class TabsPage {
 
   user:any;
 
@@ -22,10 +22,10 @@ export class TabsPage implements OnInit{
   constructor(
     public authService:AuthenticationService,
     public route: Router,
-
+/* 
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
-    public proveedor3ClimaService: Proveedor3ClimaService
+    public proveedor3ClimaService: Proveedor3ClimaService */
 
   ) {
     this.user = authService.getProfile();
@@ -39,7 +39,7 @@ export class TabsPage implements OnInit{
     })
   }
 
-  ngOnInit(){}
+ /*  ngOnInit(){}
 
   //funcion para que me salte una alerta cuando esta mal algun dato HAY QUE COMPLETARLA!!!!!!!!!!!!!!!!!!!!
   presentAlert(){}
@@ -144,7 +144,7 @@ export class TabsPage implements OnInit{
     lat.focus();
     lon.focus();
     return false;
-  }  
+  }   */
 
 
 }

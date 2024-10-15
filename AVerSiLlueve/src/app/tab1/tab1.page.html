@@ -13,17 +13,41 @@
     </ion-toolbar>
   </ion-header>
 
-  <!-- desde aca ponemos lo del video minuto 5:52-->
+  <ion-content>
+    <ion-input label="Ciudad" fill="outline" [(ngModel)]="city" type="text" value=""></ion-input>
+    <ion-button (click)="ObtenerClima()">Buscar</ion-button>
+
+    <ion-list>
+      <ion-item class="col-md-6">
+        <span *ngIf="proveedor" class="card card-body">
+          <ion-label>Cuidad: {{proveedor.name}}</ion-label>
+          <ion-label>Temperatura: {{(proveedor.main.temp-273.15).toFixed(0)}}</ion-label>
+          <ion-label>Temperatura max: {{(proveedor.main.temp_max-273.15).toFixed(0)}}</ion-label>
+          <ion-label>Temperatura min: {{(proveedor.main.temp_min-273.15).toFixed(0)}}</ion-label>
+          <ion-label>Latitud: {{proveedor.coord.lat}}</ion-label>
+          <ion-label>Longitud: {{proveedor.coord.lon}}</ion-label>
+          <ion-label>Humedad: {{proveedor.main.humidity}}</ion-label>
+          <ion-label>Presion: {{proveedor.main.pressure}}</ion-label>
+          <ion-label>Tipo de clima: {{proveedor.weather[0].description}}</ion-label>
+        </span>
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+
+
+
+
 
   <!-- METODO 1-->
-  <div class="row">
+  <!--   <div class="row">
     <div class="col-md-6">
       <div card class="card-body">
         <ion-item>
-          <!-- aca podriamos una imagen -->
+         
         </ion-item>
       
-        <br>
+
 
         <ion-label class="ion-text-center" color="primary">
           <h2 class="ion-text-center">CIUDAD #:1</h2>
@@ -38,6 +62,8 @@
           </div>
           <button class="btn btn-primary btn-block mt-2">Obtener Clima</button>
         </form>
+
+
 
       </div>
     </div>
@@ -55,15 +81,15 @@
         <p>Tipo de clima: {{proveedor.proveedor[0].description}}</p>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <br>
+
   <!-- METODO 2-->
-  <div class="row">
+  <!--   <div class="row">
     <div class="col-md-6">
       <div card class="card-body">
         <ion-item>
-          <!-- aca podriamos una imagen -->
+        
         </ion-item>
       
         <br>
@@ -101,15 +127,15 @@
         <p>Tipo de clima: {{proveedor2.proveedor2[0].description}}</p>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <br>
+
   <!-- METODO 3-->
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-md-6">
       <div card class="card-body">
         <ion-item>
-          <!-- aca podriamos una imagen -->
+    
         </ion-item>
       
         <br>
@@ -145,7 +171,7 @@
       </div>
     </div>
   </div>
-  <!-- hasta aca aca ponemos lo del video minuto 5:52-->
+ -->
 
   <app-explore-container name="Tab 1 page"></app-explore-container>
 </ion-content>

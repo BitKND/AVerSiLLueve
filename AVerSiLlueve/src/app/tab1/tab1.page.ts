@@ -3,19 +3,23 @@ import { Component, OnInit } from '@angular/core';
 import { ProveedorClimaService } from '../services/proveedoresServices/proveedor-clima.service';
 import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page implements OnInit{
+export class Tab1Page {
 
   proveedor:any;
   proveedor2:any;
   proveedor3:any;
 
+  city="";
+
   constructor(
+    public alert:AlertController,
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService
@@ -23,8 +27,26 @@ export class Tab1Page implements OnInit{
 
   ngOnInit(){}
 
+  ObtenerClima(){
+    this.proveedorClimaService.ObtenerClima(this.city)
+    .subscribe(data=>{
+      this.proveedor=data;
+      console.log(data);
+    })
+  }
+
+
+
   //funcion para que me salte una alerta cuando esta mal algun dato HAY QUE COMPLETARLA!!!!!!!!!!!!!!!!!!!!
-  presentAlert(){}
+  async presentAlert(){
+    const alert =  await this.alert.create({
+      header: '',
+      message: '',
+      buttons: ['Entendido'],
+
+    });
+     alert.present();
+  }
 
 
 // ------------------------------ proveedor 1 (temperatura actual segun lat y lon) ------------------------------

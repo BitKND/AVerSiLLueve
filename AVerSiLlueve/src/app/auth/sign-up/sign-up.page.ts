@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { AuthenticationService } from 'src/app/auth/services/authServices/authentication.service';
+import { AuthenticationService } from 'src/app/services/authServices/authentication.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
@@ -80,7 +80,7 @@ export class SignUpPage implements OnInit {
 
       if(user){
         loading.dismiss();
-        this.roter.navigate(['/tabs']);
+        this.roter.navigate(['/sign-in']);
       } else{
         this.alertaBasica();
       }
@@ -100,7 +100,7 @@ export class SignUpPage implements OnInit {
   async loginGoogle(){
     try {
       await this.authService.signInWithGoogle();
-      this.roter.navigate(['/tabs']);
+      this.roter.navigate(['/tabs/tab2']);
 
     } catch (error) {
       console.log(error);

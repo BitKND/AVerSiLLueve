@@ -16,13 +16,13 @@ import { ProveedorClimaService } from '../app/services/proveedoresServices/prove
 import { Proveedor2ClimaService } from '../app/services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../app/services/proveedoresServices/proveedor3-clima.service';
 
-//import { HttpClient } from '@angular/common/http'; //Para conectarnos con un cliente externo a través de HTTP
-
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, AngularFireModule, AngularFireAuthModule, AngularFireModule.initializeApp(environment.firebase)], //HttpClient lo saque
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideFirebaseApp(() => initializeApp({"projectId":"aversillueve-8e165","appId":"1:677722327734:web:47159b7885c6e9a2cb3417","storageBucket":"aversillueve-8e165.appspot.com","apiKey":"AIzaSyCFrAsRM_4F-fa4sG1CdQonPHHNyQxSCeA","authDomain":"aversillueve-8e165.firebaseapp.com","messagingSenderId":"677722327734"})), provideAuth(() => getAuth()), ProveedorClimaService, Proveedor2ClimaService, Proveedor3ClimaService],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, AngularFireModule, AngularFireAuthModule, AngularFireModule.initializeApp(environment.firebase), HttpClientModule],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideFirebaseApp(() => initializeApp({"projectId":"aversillueve-8e165","appId":"1:677722327734:web:47159b7885c6e9a2cb3417","storageBucket":"aversillueve-8e165.appspot.com","apiKey":"AIzaSyCFrAsRM_4F-fa4sG1CdQonPHHNyQxSCeA","authDomain":"aversillueve-8e165.firebaseapp.com","messagingSenderId":"677722327734"})), provideAuth(() => getAuth()), 
+                ProveedorClimaService, Proveedor2ClimaService, Proveedor3ClimaService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
