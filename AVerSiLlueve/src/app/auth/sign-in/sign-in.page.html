@@ -10,8 +10,16 @@
       </ion-card-header>
     
         <ion-card-content >
-          <ion-input label="Email" labelPlacement="floating" placeholder="Ingrese su Correo" fill="outline" [(ngModel)]="gEmail" type="email"></ion-input>
-          <ion-input label="Password" labelPlacement="floating" placeholder="Ingrese su Contraseña" fill="outline" [(ngModel)]="gPassword" type="password" value=""></ion-input>
+          <ion-row>
+            <ion-col>
+              <ion-input label="Email" labelPlacement="floating" placeholder="Ingrese su Correo" fill="outline" [(ngModel)]="gEmail" type="email"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-input label="Contraseña" labelPlacement="floating" placeholder="Ingrese su Contraseña" fill="outline" [(ngModel)]="gPassword" type="password" value=""></ion-input>
+            </ion-col>
+          </ion-row>  
           <ion-button color="dark" [routerLink]="['/reset-password']" fill="clear" size="full">¿Olvidaste tu contraseña?</ion-button>
           <ion-button (click)="login()" color="primary" size="full"> Ingresar </ion-button>
           <button type="button" class="google-sign-in-button" (click)="loginGoogle()">Ingresar con Google</button>
