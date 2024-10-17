@@ -13,7 +13,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class SignUpPage implements OnInit {
 
-  regForm: FormGroup | undefined;
+  regForm: FormGroup;
 
   
   private _auth = inject(AuthenticationService);
@@ -27,9 +27,9 @@ export class SignUpPage implements OnInit {
     public alert: AlertController,
     //public regForm: FormGroup,
     public formBuilder: FormBuilder,
-    public loadingCtrl: LoadingController,
+    private loadingCtrl: LoadingController,
     private roter : Router,
-    public authService:AuthenticationService,
+    private authService:AuthenticationService,
     
     ) { }
 // Hacemos uso de validadores para establecer patrones a cumplir en el mail y contraseña
@@ -50,7 +50,7 @@ export class SignUpPage implements OnInit {
   }
 
   get errorControl(){
-    return this.regForm?.controls;
+    return this.regForm.controls;
   }
 
 
