@@ -113,7 +113,7 @@ export class SignUpPage implements OnInit {
   async loginGoogle() {
     try {
       await this.authService.signInWithGoogle();
-      this.roter.navigate(['/tabs/tab2']);
+      this.roter.navigate(['/tabs/tab1']);
 
     } catch (error) {
       console.log(error);

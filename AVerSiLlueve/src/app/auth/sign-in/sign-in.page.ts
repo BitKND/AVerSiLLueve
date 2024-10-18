@@ -24,9 +24,6 @@ export class SignInPage implements OnInit {
 
   loginForm: FormGroup;
 
-  gEmail = "";
-  gPassword = "";
-
 
   private _auth = inject(AuthenticationService);
 
@@ -64,7 +61,7 @@ export class SignInPage implements OnInit {
     try {
       await this._auth.signInWithGoogle();
 
-      this.roter.navigate(['/tabs/tab2']);
+      this.roter.navigate(['/tabs/tab1']);
 
     } catch (error) {
       console.log(error);
@@ -93,11 +90,11 @@ export class SignInPage implements OnInit {
 
     try {      
       
-      const user = await this.authService.loginUser(this.gEmail,this.gPassword)
+      const user = await this.authService.loginUser(this.loginForm.value.email,this.loginForm.value.password)
 
       if(user){
         loading.dismiss();
-        this.roter.navigate(['/tabs/tab2']);
+        this.roter.navigate(['/tabs/tab1']);
       } else{
         this.alertaBasica();
       }
