@@ -10,7 +10,10 @@ ion-button[color="dark"]{
 ion-card {
     width: 90%;
     max-width: 400px;
-    
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 1); /* Sombra */
+    transition: box-shadow 0.3s ease, border-radius 0.3s ease;
+
   }
 
 .google-sign-in-button {
@@ -59,5 +62,3 @@ ion-card {
     box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
     cursor: not-allowed;
 }
-
-

@@ -1,5 +1,3 @@
-
-
 <ion-content [fullscreen]="true">
   <div class="flex-center">
     <ion-card color="light">
@@ -52,7 +50,9 @@
 
               <ion-button (click)="registerUser()" [disabled]="!regForm.valid" expand="block" color="primary"> Registrarse </ion-button>
               <div class="ion-text-center">
-                <ion-button (click)="loginGoogle()" expand="block" color="primary"> Registrate con google </ion-button>
+                <button type="button" expand="block" class="google-sign-up-button" (click)="loginGoogle()">Registrate con Google</button>
+                <ion-button color="dark" [routerLink]="['/sign-in']" fill="clear" size="full">¿Ya tienes una cuenta?</ion-button>
+
               </div>
           </form>
       </ion-card-content>
