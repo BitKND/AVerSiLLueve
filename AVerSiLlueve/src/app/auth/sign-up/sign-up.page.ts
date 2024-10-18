@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 import { AuthenticationService } from 'src/app/services/authServices/authentication.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-sign-up',
@@ -15,7 +16,7 @@ export class SignUpPage implements OnInit {
 
   regForm: FormGroup;
 
-  
+
   private _auth = inject(AuthenticationService);
 
   gEmail = "";
@@ -25,36 +26,36 @@ export class SignUpPage implements OnInit {
 
   constructor(
     public alert: AlertController,
-    //public regForm: FormGroup,
     public formBuilder: FormBuilder,
     private loadingCtrl: LoadingController,
-    private roter : Router,
-    private authService:AuthenticationService,
-    
-    ) { }
-// Hacemos uso de validadores para establecer patrones a cumplir en el mail y contraseña
-// El patron del mail debe cumplir characters@characters.domain
-// El patron de la contraseña: 8 caracteres, y al menos 1 mayuscula y 1 numero
+    private roter: Router,
+    private authService: AuthenticationService,
+    private toastController: ToastController
+
+  ) { }
+  // Hacemos uso de validadores para establecer patrones a cumplir en el mail y contraseña
+  // El patron del mail debe cumplir characters@characters.domain
+  // El patron de la contraseña: 8 caracteres, y al menos 1 mayuscula y 1 numero
   ngOnInit() {
     this.regForm = this.formBuilder.group({
-      email:['', [
+      email: ['', [
         Validators.required,
         Validators.email,
         Validators.pattern("[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$")
       ]],
-      password:["",
-      Validators.required,
-      Validators.pattern("(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}")
-    ]
+      password: ['', [
+        Validators.required,
+        Validators.pattern("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-8])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}")
+      ]]
     })
   }
 
-  get errorControl(){
+  get errorControl() {
     return this.regForm.controls;
   }
 
 
-  async alertaBasica(){
+  async alertaBasica() {
 
     const alert = await this.alert.create({
       header: 'Email o contraseña incorrectos',
@@ -65,39 +66,51 @@ export class SignUpPage implements OnInit {
     await alert.present();
   }
 
-/*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
-  Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
-  En caso de ser valores erroneos, devuelve alerta de aviso
-  Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien*/
-  async registerUser(){
+  /*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
+    Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
+    En caso de ser valores erroneos, devuelve alerta de aviso
+    Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien*/
+  async registerUser() {
 
     const loading = await this.loadingCtrl.create();
     await loading.present();
+    
+      try {
+        const user = await this.authService.registerUser(this.regForm.value.email, this.regForm.value.password)
 
-    try {      
-      
-       const user = await this.authService.registerUser(this.gEmail,this.gPassword)
+        if (user) {
+          loading.dismiss();
+          this.roter.navigate(['/sign-in']);
+        } else {
+          this.alertaBasica();
+        }
 
-      if(user){
-        loading.dismiss();
-        this.roter.navigate(['/sign-in']);
-      } else{
+      } catch (error) {
+        console.log(error);
         this.alertaBasica();
+        loading.dismiss();
       }
-    
-    } catch (error) {
-      console.log(error);
-      this.alertaBasica();
-      loading.dismiss();
-    }
-
-    
-    
   }
+
+  async presentToast(message: undefined) {
+    console.log(message);
+    
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: 'top',
+    });
+
+    await toast.present();
+  }
+
+
+  
+
   /*El try catch intenta hacer uso de signinwithgoogle declarado en authenthication service, si es correcto se abre el pop up
   para elegir la cuenta de google con la cual iniciar sesion.
   En el caso de algun error, el catch lo atrapa y se muestra por consola que ocurrio un error*/
-  async loginGoogle(){
+  async loginGoogle() {
     try {
       await this.authService.signInWithGoogle();
       this.roter.navigate(['/tabs/tab2']);

@@ -9,9 +9,6 @@ export class ProveedorClimaService {
 
   apiKey = 'c760af7a74a4ec3543b1ddd7f09e9636'; //ES CONSTANTE, POR ESO LA DECLARO ACA
   URI : string = '';
-  lat = '160' ; //? lo establecemos como vacio para que despues lo rellene el usuario a traves de la funcion obtenerDatos1
-  lon = '50' ; //? lo establecemos como vacio para que despues lo rellene el usuario a traves de la funcion obtenerDatos1
-  //city!:string;
 
   constructor(
     public http: HttpClient
@@ -27,7 +24,7 @@ export class ProveedorClimaService {
   //CREAMOS METODO PARA OBTENER DATOS API
   obtenerDatos1(lat: string , lon: string)
   {
-    return this.http.get(`${this.URI}${lat},${lon}`);
+    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid=${this.apiKey}`);
   }
 
   ObtenerClima(city: string){

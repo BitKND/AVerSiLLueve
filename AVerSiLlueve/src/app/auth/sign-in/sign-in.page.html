@@ -10,12 +10,43 @@
       </ion-card-header>
     
         <ion-card-content >
-          <ion-input label="Email" labelPlacement="floating" placeholder="Ingrese su Correo" fill="outline" [(ngModel)]="gEmail" type="email"></ion-input>
-          <ion-input label="Password" labelPlacement="floating" placeholder="Ingrese su Contraseña" fill="outline" [(ngModel)]="gPassword" type="password" value=""></ion-input>
+          <form [formGroup]="loginForm" novalidate>
+          <ion-row>
+            <ion-col>
+              <ion-input formControlName="email" label="Email" labelPlacement="floating" placeholder="Ingrese mail" fill="outline"  type="email"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <div *ngIf="this.loginForm.controls?.['email'].touched && this.loginForm.controls?.['email'].invalid">
+            <ion-text *ngIf="errorControl.email.errors?.required">
+              Email requerido
+            </ion-text>
+           <ion-text *ngIf="errorControl.email.errors?.pattern">
+              El email debe ser valido
+            </ion-text> 
+          </div>
+
+          <ion-row>
+            <ion-col>
+              <ion-input formControlName="password" label="Contraseña" labelPlacement="floating" placeholder="Ingrese contraseña" fill="outline"  type="password" value=""></ion-input>
+            </ion-col>
+          </ion-row> 
+
+          <div *ngIf="this.loginForm.controls?.['password'].touched && this.loginForm.controls?.['password'].invalid">
+            <ion-text *ngIf="errorControl.password.errors?.required">
+               Contraseña requerida
+            </ion-text>
+            <ion-text *ngIf="errorControl.password.errors?.pattern">
+               Ingrese una contraseña valida
+             </ion-text> 
+           </div>
+          
           <ion-button color="dark" [routerLink]="['/reset-password']" fill="clear" size="full">¿Olvidaste tu contraseña?</ion-button>
-          <ion-button (click)="login()" color="primary" size="full"> Ingresar </ion-button>
+          <ion-button (click)="login()" [disabled]="!loginForm.valid" color="primary" size="full"> Ingresar </ion-button>
           <button type="button" class="google-sign-in-button" (click)="loginGoogle()">Ingresar con Google</button>
           <ion-button color="dark" [routerLink]="['/sign-up']" fill="clear" size="full">¿No tienes una cuenta? Registrate Aqui</ion-button> 
+
+        </form>
         </ion-card-content>
       
     </ion-card>

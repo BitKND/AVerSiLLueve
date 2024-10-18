@@ -10,9 +10,7 @@ export class Proveedor2ClimaService {
   limit = '5';//ES CONSTANTE, POR ESO LA DECLARO ACA
 
   URI : string = '';
-  cityName : string = ''; //? lo establecemos como vacio para que despues lo rellene el usuario a traves de la funcion obtenerDatos2
-  stateCode : string = ''; //? lo establecemos como vacio para que despues lo rellene el usuario a traves de la funcion obtenerDatos2
-  countryCode : string = ''; //? lo establecemos como vacio para que despues lo rellene el usuario a traves de la funcion obtenerDatos2
+
 
 
   constructor(
@@ -22,13 +20,13 @@ export class Proveedor2ClimaService {
     //Yo lo habia pensado como:
     //this.URI=`http://api.openweathermap.org/geo/1.0/direct?q={${this.cityName},${this.stateCode},${this.countryCode}}&limit={${this.limit}}&appid={${this.apiKey}}`;
     //en el video lo muestra como:
-    this.URI=`https://api.openweathermap.org/data/2.5/weather?&appid=${this.apiKey}&limit={${this.limit}}&units=metric&q=`;
+   // this.URI=`https://api.openweathermap.org/data/2.5/weather?&appid=${this.apiKey}&limit={${this.limit}}&units=metric&q=`;
   }
 
   //CREAMOS METODO PARA OBTENER DATOS API
   obtenerDatos2(cityName: string, stateCode: string, countryCode: string)
   {
-    return this.http.get(`${this.URI}${cityName},${stateCode},${countryCode}`);
+    return this.http.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${stateCode},${countryCode}&limit=${this.limit}&appid=${this.apiKey}`);
   }
 
 }

@@ -22,7 +22,7 @@ export class SignInPage implements OnInit {
   // Initialize Firebase Authentication and get a reference to the service
   oAuth = getAuth(this.oApp);
 
-  regForm: FormGroup | undefined;
+  loginForm: FormGroup;
 
   gEmail = "";
   gPassword = "";
@@ -40,17 +40,21 @@ export class SignInPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.regForm = this.formBuilder.group({
+    this.loginForm = this.formBuilder.group({
       email:['', [
         Validators.required,
         Validators.email,
         Validators.pattern("[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$")
       ]],
-      password:["",
+      password:['',[
       Validators.required,
-      Validators.pattern("(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}")
-    ]
+      Validators.pattern("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-8])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}")
+    ]]
     })
+  }
+
+  get errorControl(){
+    return this.loginForm.controls;
   }
 
     /*El try catch intenta hacer uso de signinwithgoogle declarado en authenthication service, si es correcto se abre el pop up
@@ -105,21 +109,6 @@ export class SignInPage implements OnInit {
     }
   }
 
-/*   async llogin() {
-    const auth = getAuth();
-    signInWithEmailAndPassword(this.oAuth, this.gEmail, this.gPassword)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        // ...
 
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-      });
-  } */
 
 }

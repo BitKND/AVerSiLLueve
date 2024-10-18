@@ -1,62 +1,61 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button>Volver</ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-<ion-content>
-  <div class="card-container">
-    <ion-card>
-      <ion-row>
-        <ion-col size-md="2" size="3" class="ion-padding ion-blue-bkg">
-          <img
-            src="https://images.prismic.io/ionicframeworkcom/ac68e1d9-9887-4e5a-9820-9290d06638de_ionic+logo+white+on+blue.png"
-            alt="Ionic logo" loading="lazy" />
-        </ion-col>
-        <ion-col size-md="9" size="12" class="welcome">
+
+
+<ion-content [fullscreen]="true">
+  <div class="flex-center">
+    <ion-card color="light">
+      <div class="ion-text ion-padding">
+        <a href="http://localhost:8100/sign-in">
+          <ion-icon name="arrow-back-circle-outline" size="large"></ion-icon>
+        </a>
+      </div>
+      <div  class="ion-text-center ion-padding">
+        <img src="../../../assets/icon/iconlogin.png" alt="" width="50%">
+      </div>
+      <ion-card-content>
           <ion-card-header>
-            <ion-card-title> Registrate! </ion-card-title>
+            <ion-card-title color="primary"> Registrate! </ion-card-title>
           </ion-card-header>
 
-<!--           <ion-row>
-            <ion-col>
-              <ion-input label="Nombre" fill="outline" [(ngModel)]="account.Nombre" type="nombre">
-              </ion-input>
-            </ion-col>
-          </ion-row>
+          <form [formGroup]="regForm" novalidate>
+              <ion-row>
+                <ion-col>
+                  <ion-input formControlName="email" label="Email" labelPlacement="floating" placeholder="Ingrese mail" fill="outline"  type="email"></ion-input>
+                </ion-col>
+              </ion-row>
 
-          <ion-row>
-            <ion-col>
-              <ion-input label="Username" fill="outline" [(ngModel)]="account.Username" type="username">
-              </ion-input>
-            </ion-col>
-          </ion-row> -->
+              <div *ngIf="this.regForm.controls?.['email'].touched && this.regForm.controls?.['email'].invalid">
+                <ion-text *ngIf="errorControl.email.errors?.required">
+                  Email requerido
+                </ion-text>
+               <ion-text *ngIf="errorControl.email.errors?.pattern">
+                  El email debe ser valido
+                </ion-text> 
+              </div>
+    
+              <ion-row>
+                <ion-col>
+                  <ion-input formControlName="password" label="Contraseña" labelPlacement="floating" placeholder="Ingrese contraseña" fill="outline"  type="password" value=""></ion-input>
+                </ion-col>
+              </ion-row>
+              <div *ngIf="this.regForm.controls?.['password'].touched && this.regForm.controls?.['password'].invalid">
+               <ion-text *ngIf="errorControl.password.errors?.required">
+                  Contraseña requerida
+               </ion-text>
+               <ion-text *ngIf="errorControl.password.errors?.pattern">
+                  La contraseña debe tener
+                  8 caracteres.
+                  Una mayuscula.
+                  Un número.
+                  Un simbolo.
+                </ion-text> 
+              </div>
 
-          <ion-row>
-            <ion-col>
-              <ion-input label="Email" fill="outline" [(ngModel)]="gEmail" type="email">
-              </ion-input>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col>
-              <ion-input label="Password" fill="outline" [(ngModel)]="gPassword" type="password" value="">
-              </ion-input>
-            </ion-col>
-          </ion-row>
-
-          <ion-card-content>
-            <ion-button (click)="registerUser()" shape="round" color="primary"> Registrarse </ion-button>
-          </ion-card-content>
-
-          <ion-card-content>
-            <ion-button (click)="loginGoogle()" shape="" color="primary"> Sign in with google </ion-button>
-          </ion-card-content>
-        </ion-col>
-      </ion-row>
-
+              <ion-button (click)="registerUser()" [disabled]="!regForm.valid" expand="block" color="primary"> Registrarse </ion-button>
+              <div class="ion-text-center">
+                <ion-button (click)="loginGoogle()" expand="block" color="primary"> Registrate con google </ion-button>
+              </div>
+          </form>
+      </ion-card-content>
     </ion-card>
   </div>
 </ion-content>
