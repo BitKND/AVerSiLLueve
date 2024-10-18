@@ -1,4 +1,4 @@
-.search-bar {
+.barra-busq {
     --background: #2c2c2e; /* Color del input */
     --border-radius: 20px; /* Bordes redondeados */
     border: 1px solid #3a3a3c; /* Borde alrededor */
@@ -7,7 +7,7 @@
     padding-left: 10px;
   }
   
-  .custom-search {
+  .custom-busq {
     --padding-start: 0;
     --background: transparent;
     --color: white;
@@ -54,4 +54,7 @@
     margin: 0;
     color: #d1d1d1;
   }
-  
+
+  .letra-color {
+    color: white;
+}

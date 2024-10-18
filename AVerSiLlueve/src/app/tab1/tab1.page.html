@@ -1,20 +1,18 @@
 <ion-content [fullscreen]="true">
-
-
   <ion-card-header>
     <ion-title size="large">Clima</ion-title>
   </ion-card-header>
 
   <!-- Contenedor de la barra de búsqueda -->
-  <ion-item class="search-bar">
+  <ion-item class="barra-busq">
     <ion-icon name="search-outline" slot="start"></ion-icon>
     
     <ion-input
-      class="custom-search" placeholder="Buscar ciudad" type="text" [(ngModel)]="city">
+      class="custom-busq" placeholder="Buscar ciudad" type="text" [(ngModel)]="city">
     </ion-input>
     
     <!-- Botón alineado al input -->
-    <ion-button fill="clear" (click)="ObtenerClima()"> Buscar </ion-button>
+    <ion-button fill="clear" (click)="ObtenerClima()" class="letra-color"> Buscar </ion-button>
   </ion-item>
 
   <!-- Resultados del clima -->
