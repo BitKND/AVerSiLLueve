@@ -1,38 +1,44 @@
 <ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-header>
-      <ion-title size="large">Clima</ion-title>
-    </ion-card-header>
 
+
+  <ion-card-header>
+    <ion-title size="large">Clima</ion-title>
+  </ion-card-header>
+
+  <!-- Contenedor de la barra de búsqueda -->
+  <ion-item class="search-bar">
+    <ion-icon name="search-outline" slot="start"></ion-icon>
+    
+    <ion-input
+      class="custom-search" placeholder="Buscar ciudad" type="text" [(ngModel)]="city">
+    </ion-input>
+    
+    <!-- Botón alineado al input -->
+    <ion-button fill="clear" (click)="ObtenerClima()"> Buscar </ion-button>
+  </ion-item>
+
+  <!-- Resultados del clima -->
+  <ion-card class="weather-card" *ngIf="proveedor">
     <ion-card-content>
-      <ion-row>
-        <ion-col>
-          <ion-input
-            class="custom-input" [(ngModel)]="city" label="Ciudad" label-placement="floating" placeholder="Buscar ciudad o localidad" fill="outline" type="text">
-          </ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-button expand="full" (click)="ObtenerClima()">Buscar</ion-button>
-
-      <ion-list>
-        <ion-item *ngIf="proveedor">
-          <ion-label>
-            <h2>Ciudad: {{proveedor.name}}</h2>
-            <p>Temperatura: {{(proveedor.main.temp - 273.15).toFixed(0)}} °C</p>
-            <p>Temperatura máxima: {{(proveedor.main.temp_max - 273.15).toFixed(0)}} °C</p>
-            <p>Temperatura mínima: {{(proveedor.main.temp_min - 273.15).toFixed(0)}} °C</p>
-            <p>Latitud: {{proveedor.coord.lat}}</p>
-            <p>Longitud: {{proveedor.coord.lon}}</p>
-            <p>Humedad: {{proveedor.main.humidity}} %</p>
-            <p>Presión: {{proveedor.main.pressure}} hPa</p>
-            <p>Tipo de clima: {{proveedor.weather[0].description}}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="9">
+            <h1>{{proveedor.name}}</h1>
+            <p><ion-icon name="location-outline"></ion-icon>{{proveedor.name}}</p>
+            <p>{{proveedor.weather[0].description}}</p>
+          </ion-col>
+          <ion-col size="3" class="temp-col">
+            <h1>{{(proveedor.main.temp - 273.15).toFixed(0)}}°</h1>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <p>Máxima: {{(proveedor.main.temp_max - 273.15).toFixed(0)}}° Mínima: {{(proveedor.main.temp_min - 273.15).toFixed(0)}}°</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
-
-
 
   <!-- METODO 1-->
   <!--   <div class="row">
