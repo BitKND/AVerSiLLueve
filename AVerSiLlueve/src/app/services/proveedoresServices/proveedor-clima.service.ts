@@ -6,9 +6,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ProveedorClimaService {
-
+  URI: string = 'https://api.openweathermap.org/data/2.5/weather'; // Base URL
   apiKey = 'c760af7a74a4ec3543b1ddd7f09e9636'; //ES CONSTANTE, POR ESO LA DECLARO ACA
-  URI : string = '';
+  // URI : string = '';
   lat = '160' ; //? lo establecemos como vacio para que despues lo rellene el usuario a traves de la funcion obtenerDatos1
   lon = '50' ; //? lo establecemos como vacio para que despues lo rellene el usuario a traves de la funcion obtenerDatos1
   //city!:string;
@@ -25,14 +25,19 @@ export class ProveedorClimaService {
   }
 
   //CREAMOS METODO PARA OBTENER DATOS API
-  obtenerDatos1(lat: string , lon: string)
-  {
-    return this.http.get(`${this.URI}${lat},${lon}`);
+  obtenerDatos1(lat: string , lon: string){
+     return this.http.get(`${this.URI}${lat},${lon}`);
+    // const url = `${this.URI}?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`; 
+    // return this.http.get(url);
   }
 
   ObtenerClima(city: string){
-    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}`);
+    // return this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}`);}
+
+    // const url =(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}&lang=es`);
+    const url = `${this.URI}?q=${city}&appid=${this.apiKey}&units=metric&lang=es`; 
+    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}&lang=es`);//para que la descripcion sea en español
   }
-
-
 }
+
+

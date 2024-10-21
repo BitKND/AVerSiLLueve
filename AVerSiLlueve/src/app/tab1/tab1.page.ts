@@ -1,38 +1,43 @@
 import { Component, OnInit } from '@angular/core';
-
 import { ProveedorClimaService } from '../services/proveedoresServices/proveedor-clima.service';
 import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
 import { AlertController } from '@ionic/angular';
+
+interface ClimaData {
+  weather: { icon: string }[];  // Ajusta esto según la estructura de la API
+}
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
+
 export class Tab1Page {
 
   proveedor:any;
   proveedor2:any;
   proveedor3:any;
-
   city="";
+  imageURL="";
 
   constructor(
     public alert:AlertController,
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
-    public proveedor3ClimaService: Proveedor3ClimaService
+    public proveedor3ClimaService: Proveedor3ClimaService,
   ) {}
 
   ngOnInit(){}
 
-  ObtenerClima(){
+  ObtenerClima() {
     this.proveedorClimaService.ObtenerClima(this.city)
-    .subscribe(data=>{
-      this.proveedor=data;
+    .subscribe((data: any)=>{
+      this.proveedor = data;
+      this.imageURL = data.weather[0].icon;  // Ajustado para acceder al array de weather
       console.log(data);
-    })
+    });
   }
 
 

@@ -26,7 +26,10 @@
             <p>{{proveedor.weather[0].description}}</p>
           </ion-col>
           <ion-col size="3" class="temp-col">
-            <h1>{{(proveedor.main.temp - 273.15).toFixed(0)}}°</h1>
+            <div class="temp-container" style="display: flex; align-items: center; justify-content: space-around;">
+              <img src="https://openweathermap.org/img/wn/{{ imageURL }}@2x.png" alt="weather-image" style="width: 60px; height: 60px; margin-right: 10px;" />
+              <h1 style="font-size: 2.5em; margin: 0;">{{(proveedor.main.temp - 273.15).toFixed(0)}}°</h1>
+            </div>
           </ion-col>
         </ion-row>
         <ion-row>
