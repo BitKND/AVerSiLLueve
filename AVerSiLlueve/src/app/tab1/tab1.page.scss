@@ -30,12 +30,15 @@
     color: white;
     border-radius: 15px; /* Bordes  */
     padding: 10px;
-    background-image: url('/path-to-your-background-image.jpg'); /* fondo   */
+    
     background-size: cover;
     
   }
   .weather-card {
     .temp-col {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
       .temp-container {
         display: grid;
         place-items: center;  // Centra tanto horizontal como verticalmente

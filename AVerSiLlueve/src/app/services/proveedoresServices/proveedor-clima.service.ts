@@ -27,11 +27,13 @@ export class ProveedorClimaService {
     return this.http.get(`https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid=${this.apiKey}`);
   }
 
-  ObtenerClima(city: string){
-    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}`);
+  // ObtenerClima(city: string){
+  //    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}`);
+  //  }
+  ObtenerClima(city: string) {
+    const url = `${this.URI}?q=${city}&appid=${this.apiKey}&units=metric&lang=es`; 
+    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}&lang=es`);// idioma español el detalle del clima
   }
-
-
 }
 
 
