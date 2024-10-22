@@ -1,20 +1,18 @@
 <ion-content [fullscreen]="true">
-
-
   <ion-card-header>
     <ion-title size="large">Clima</ion-title>
   </ion-card-header>
 
   <!-- Contenedor de la barra de búsqueda -->
-  <ion-item class="search-bar">
+  <ion-item class="barra-busq">
     <ion-icon name="search-outline" slot="start"></ion-icon>
     
     <ion-input
-      class="custom-search" placeholder="Buscar ciudad" type="text" [(ngModel)]="city">
+      class="custom-busq" placeholder="Buscar ciudad" type="text" [(ngModel)]="city">
     </ion-input>
     
     <!-- Botón alineado al input -->
-    <ion-button fill="clear" (click)="ObtenerClima()"> Buscar </ion-button>
+    <ion-button fill="clear" (click)="ObtenerClima()" class="letra-color"> Buscar </ion-button>
   </ion-item>
 
   <!-- Resultados del clima -->
@@ -28,7 +26,10 @@
             <p>{{proveedor.weather[0].description}}</p>
           </ion-col>
           <ion-col size="3" class="temp-col">
-            <h1>{{(proveedor.main.temp - 273.15).toFixed(0)}}°</h1>
+            <div class="temp-container" style="display: flex; align-items: center; justify-content: space-around;">
+              <img src="https://openweathermap.org/img/wn/{{ imageURL }}@2x.png" alt="weather-image" style="width: 60px; height: 60px; margin-right: 10px;" />
+              <h1 style="font-size: 2.5em; margin: 0;">{{(proveedor.main.temp - 273.15).toFixed(0)}}°</h1>
+            </div>
           </ion-col>
         </ion-row>
         <ion-row>
