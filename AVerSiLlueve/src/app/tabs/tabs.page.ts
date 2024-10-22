@@ -30,10 +30,11 @@ export class TabsPage {
   ) {
     this.user = authService.getProfile();
   }
-
+//Hacemos uso del servicio de authservice establecido, y le agregamos que elimine el flag 'ingresado', para respetar el criterio de los guards establecidos.
   async logout(){
     this.authService.signOut().then(()=>{
-      this.route.navigate(['/sign-in'])
+      localStorage.removeItem('ingresado');
+      this.route.navigate(['/sign-in']);
     }).catch((error)=>{
       console.log(error);
     })

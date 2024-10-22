@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-sign-up',
@@ -25,6 +26,7 @@ export class SignUpPage implements OnInit {
   //Declaramos las clases en el constructor que vamos a utilizar acorde a los modulos.
 
   constructor(
+    
     public alert: AlertController,
     public formBuilder: FormBuilder,
     private loadingCtrl: LoadingController,
@@ -69,7 +71,8 @@ export class SignUpPage implements OnInit {
   /*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
     Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
     En caso de ser valores erroneos, devuelve alerta de aviso
-    Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien*/
+    Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien
+    Se agrega una flag almacenada en localstorage llamada 'ingresado'. Se hace uso de esto para establecer los guards y no permitir ingreso a la app sin iniciar sesion*/
   async registerUser() {
 
     const loading = await this.loadingCtrl.create();
@@ -80,7 +83,8 @@ export class SignUpPage implements OnInit {
 
         if (user) {
           loading.dismiss();
-          this.roter.navigate(['/sign-in']);
+          localStorage.setItem('ingresado','true');
+          this.roter.navigate( ['/tabs/tab1']);
         } else {
           this.alertaBasica();
         }

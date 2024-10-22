@@ -35,6 +35,7 @@ export class AuthenticationService {
   //Funcion para cerrar sesion
   async signOut(){
     return await this.ngFireAuth.signOut();
+    
   }
   //Funcion para obtener datos del perfil que inicio sesion
   async getProfile(){

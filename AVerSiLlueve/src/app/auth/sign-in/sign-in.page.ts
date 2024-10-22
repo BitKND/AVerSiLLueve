@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class SignInPage implements OnInit {
   private _auth = inject(AuthenticationService);
 
   constructor(
+    private navCtrl:NavController,
     private alert: AlertController,
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
@@ -35,7 +37,7 @@ export class SignInPage implements OnInit {
     public authService:AuthenticationService,
   ) { 
   }
-
+//Se establecen los patrones a cumplir en email y contraseña
   async ngOnInit() {
     this.loginForm = this.formBuilder.group({
       email:['', [
@@ -56,11 +58,13 @@ export class SignInPage implements OnInit {
 
     /*El try catch intenta hacer uso de signinwithgoogle declarado en authenthication service, si es correcto se abre el pop up
   para elegir la cuenta de google con la cual iniciar sesion.
-  En el caso de algun error, el catch lo atrapa y se muestra por consola que ocurrio un error*/
+  En el caso de algun error, el catch lo atrapa y se muestra por consola que ocurrio un error
+  Se agrega una flag almacenada en localstorage llamada 'ingresado'. Se hace uso de esto para establecer los guards y no permitir ingreso a la app sin iniciar sesion*/
   async loginGoogle() {
     try {
       await this._auth.signInWithGoogle();
 
+      localStorage.setItem('ingresado','true');
       this.roter.navigate(['/tabs/tab1']);
 
     } catch (error) {
@@ -83,7 +87,8 @@ export class SignInPage implements OnInit {
   /*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
   Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
   En caso de ser valores erroneos, devuelve alerta de aviso
-  Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien*/
+  Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien
+  Se agrega una flag almacenada en localstorage llamada 'ingresado'. Se hace uso de esto para establecer los guards y no permitir ingreso a la app sin iniciar sesion*/
   async login(){
     const loading = await this.loadingCtrl.create();
     await loading.present();
@@ -94,7 +99,9 @@ export class SignInPage implements OnInit {
 
       if(user){
         loading.dismiss();
+        localStorage.setItem('ingresado','true');
         this.roter.navigate(['/tabs/tab1']);
+        
       } else{
         this.alertaBasica();
       }
