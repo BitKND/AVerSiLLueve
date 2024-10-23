@@ -21,7 +21,7 @@ export class Proveedor3ClimaService {
   }
 
   //CREAMOS METODO PARA OBTENER DATOS API
-  obtenerDatos3(lat: string, lon: string)
+  foreCast(lat: string, lon: string)
   {
     return this.http.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}`);
   }

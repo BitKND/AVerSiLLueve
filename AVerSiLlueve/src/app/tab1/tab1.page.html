@@ -41,6 +41,26 @@
     </ion-card-content>
   </ion-card>
 
+
+
+  <ion-item class="barra-busq">
+    <ion-icon name="search-outline" slot="start"></ion-icon>    
+    <ion-input
+      class="custom-busq" placeholder="Buscar Latitud" type="text" [(ngModel)]="lat">
+    </ion-input>
+    <ion-input
+      class="custom-busq" placeholder="Buscar Longitud" type="text" [(ngModel)]="lon">
+    </ion-input>
+    
+    <!-- Botón alineado al input -->
+    <ion-button fill="clear" (click)="foreCast()" class="letra-color"> Buscar </ion-button>
+  </ion-item>
+
+  <ion-card *ngIf="proveedor3">
+    
+
+  </ion-card>
+
   
 
   <!-- METODO 1-->

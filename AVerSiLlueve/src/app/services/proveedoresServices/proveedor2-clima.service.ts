@@ -24,7 +24,7 @@ export class Proveedor2ClimaService {
   }
 
   //CREAMOS METODO PARA OBTENER DATOS API
-  obtenerDatos2(cityName: string, stateCode: string, countryCode: string)
+  Geocoding(cityName: string, stateCode: string, countryCode: string)
   {
     return this.http.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${stateCode},${countryCode}&limit=${this.limit}&appid=${this.apiKey}`);
   }

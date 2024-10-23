@@ -19,8 +19,11 @@ export class Tab1Page {
   proveedor:any;
   proveedor2:any;
   proveedor3:any;
+  proveedor4:any;
   city="";
   imageURL="";
+  lat="";
+  lon="";
 
   constructor(
     public alert:AlertController,
@@ -30,7 +33,7 @@ export class Tab1Page {
   ) {}
 
   ngOnInit(){}
-
+  // -------------- Obtener clima por ciudad ------------
   ObtenerClima() {
     this.proveedorClimaService.ObtenerClima(this.city)
     .subscribe((data: any)=>{
@@ -38,6 +41,45 @@ export class Tab1Page {
       this.imageURL = data.weather[0].icon;  // Ajustado para acceder al array de weather
       console.log(data);
     });
+  }
+
+  // ------------------------------ proveedor 1 (temperatura actual segun lat y lon) ------------------------------
+  //METODO 1 PARA OBTENER API DE CLIMA 
+  currentWeather(lat: string, lon: string) {
+    this.proveedorClimaService.currentWeather(lat, lon)
+    .subscribe((data: any)=> {
+        console.log(data);
+        this.proveedor4 = data 
+      },
+      err => console.log(err)
+    )
+  }
+
+  // ------------------------------ proveedor 2 (temperatura actual segun cityName, stateCode, countryCode) ------------------------------
+  //METODO Geocoding API
+  geocoding(cityName: string, stateCode: string, countryCode: string) {
+    this.proveedor2ClimaService.Geocoding(cityName, stateCode, countryCode)
+    .subscribe((data:any) =>{
+        console.log(data);
+        this.proveedor2 = data
+      },
+      err => console.log(err)
+    )
+  }
+
+  
+
+  // ------------------------------ proveedor 3 (temperatura futuro segun lat y lon) ------------------------------
+
+  //METODO 3 para obtener forecast
+  foreCast() {
+    this.proveedor3ClimaService.foreCast(this.lat, this.lon)
+    .subscribe((data:any) => {
+        console.log(data);
+        this.proveedor3 = data
+      },
+      err => console.log(err)
+    )
   }
 
 
@@ -54,28 +96,13 @@ export class Tab1Page {
   }
 
 
-// ------------------------------ proveedor 1 (temperatura actual segun lat y lon) ------------------------------
-  //METODO 1 PARA OBTENER API DE CLIMA 
-  getClima1(lat: string, lon: string) {
-    this.proveedorClimaService.obtenerDatos1(lat, lon).subscribe(
-      //profe:
-      //(data)=> {this.proveedor = data;},
-      //(error)=> {console.log(error);}
 
-      //video:
-      res => {
-        console.log(res);
-        this.proveedor = res // = res.results?
-      },
-      err => console.log(err)
-    )
-  }
 
   //METODO PARA LLAMAR EN HTML
   //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
   submitLocation1(lat: HTMLInputElement, lon: HTMLInputElement){
     if(lat&&lon){
-      this.getClima1(lat.value,lon.value);
+      this.currentWeather(lat.value,lon.value);
       lat.value ="";
       lon.value ="";
     }else{
@@ -86,29 +113,13 @@ export class Tab1Page {
     return false;
   }
  
-// ------------------------------ proveedor 2 (temperatura actual segun cityName, stateCode, countryCode) ------------------------------
-  //METODO 2 PARA OBTENER API DE CLIMA 
-  getClima2(cityName: string, stateCode: string, countryCode: string) {
-    this.proveedor2ClimaService.obtenerDatos2(cityName, stateCode, countryCode)
-    .subscribe(
-      //profe
-      //(data)=> {this.proveedor2 = data;},
-      //(error)=> {console.log(error);}
 
-      //video
-      res => {
-        console.log(res);
-        this.proveedor2 = res
-      },
-      err => console.log(err)
-    )
-  }
 
   //METODO PARA LLAMAR EN HTML
   //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
     submitLocation2(cityName: HTMLInputElement, stateCode: HTMLInputElement, countryCode: HTMLInputElement){
       if(cityName&&stateCode&&countryCode){
-        this.getClima2(cityName.value,stateCode.value,countryCode.value);
+        this.geocoding(cityName.value,stateCode.value,countryCode.value);
         cityName.value ="";
         stateCode.value ="";
         countryCode.value ="";
@@ -121,28 +132,11 @@ export class Tab1Page {
       return false;
     }
 
-// ------------------------------ proveedor 3 (temperatura futuro segun lat y lon) ------------------------------
 
-  //METODO 3 PARA OBTENER API DE CLIMA 
-  getClima3(lat: string, lon: string) {
-    this.proveedor3ClimaService.obtenerDatos3(lat, lon)
-    .subscribe(
-      //profe
-      //(data)=> {this.proveedor3 = data;},
-      //(error)=> {console.log(error);}
-
-      //video
-      res => {
-        console.log(res);
-        this.proveedor3 = res
-      },
-      err => console.log(err)
-    )
-  }
 
   //METODO PARA LLAMAR EN HTML
   //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
-  submitLocation3(lat: HTMLInputElement, lon: HTMLInputElement){
+/*   submitLocation3(lat: HTMLInputElement, lon: HTMLInputElement){
     if(lat&&lon){
       this.getClima3(lat.value,lon.value);
       lat.value ="";
@@ -153,6 +147,6 @@ export class Tab1Page {
     lat.focus();
     lon.focus();
     return false;
-  }  
+  }   */
 
 }

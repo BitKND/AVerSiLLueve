@@ -22,7 +22,7 @@ export class ProveedorClimaService {
   }
 
   //CREAMOS METODO PARA OBTENER DATOS API
-  obtenerDatos1(lat: string , lon: string)
+  currentWeather(lat: string , lon: string)
   {
     return this.http.get(`https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid=${this.apiKey}`);
   }
