@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../services/authServices/authentication.service';
 import { Router } from '@angular/router';
 
-import { ProveedorClimaService } from '../services/proveedoresServices/proveedor-clima.service';
-import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
-import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
+
 
 @Component({
   selector: 'app-tabs',

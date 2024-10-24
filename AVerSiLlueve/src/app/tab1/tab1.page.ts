@@ -3,6 +3,7 @@ import { ProveedorClimaService } from '../services/proveedoresServices/proveedor
 import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
 import { AlertController } from '@ionic/angular';
+import { Geolocation } from '@capacitor/geolocation';
 
 interface ClimaData {
   weather: { icon: string }[];  // Ajusta esto según la estructura de la API
@@ -30,9 +31,33 @@ export class Tab1Page {
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService,
+    private geolocation:Geolocation,
   ) {}
 
   ngOnInit(){}
+
+
+  async getCurrentLocation(){
+    try {
+      const permissionStatus = await Geolocation.checkPermissions();
+      console.log('Permission status: ', permissionStatus.location);
+      if(permissionStatus.location != 'granted') {
+        const requestStatus = await Geolocation.requestPermissions();
+        if(requestStatus.location != 'granted'){
+          return null;
+        }
+      }
+      let options: PositionOptions = {
+        maximumAge: 3000,
+        timeout: 10000,
+        enableHighAccuracy: true
+      };
+      return await Geolocation.getCurrentPosition(options);            
+    } catch (e) {
+      console.log(e);
+      throw(e);      
+    }
+  }
   // -------------- Obtener clima por ciudad ------------
   ObtenerClima() {
     this.proveedorClimaService.ObtenerClima(this.city)
