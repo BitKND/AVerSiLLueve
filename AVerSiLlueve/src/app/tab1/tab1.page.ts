@@ -24,7 +24,7 @@ export class Tab1Page {
   imageURL="";
   lat="";
   lon="";
-
+  isExpanded = false; // Para controlar si está expandido
   constructor(
     public alert:AlertController,
     public proveedorClimaService: ProveedorClimaService,
@@ -39,6 +39,8 @@ export class Tab1Page {
     .subscribe((data: any)=>{
       this.proveedor = data;
       this.imageURL = data.weather[0].icon;  // Ajustado para acceder al array de weather
+      this.lat = data.coord.lat; // Guardar latitud
+      this.lon = data.coord.lon; // Guardar longitud
       console.log(data);
     });
   }
@@ -76,13 +78,22 @@ export class Tab1Page {
     this.proveedor3ClimaService.foreCast(this.lat, this.lon)
     .subscribe((data:any) => {
         console.log(data);
-        this.proveedor3 = data
+        this.proveedor3 = {
+          ...data, // Copiamos el resto de las propiedades del objeto original
+          list: data.list.slice(0, 8) // Tomar solo los primeros 8 intervalos (24 horas)
+        };
       },
       err => console.log(err)
     )
   }
 
-
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
+    if (this.isExpanded) {
+      // Obtener el pronóstico si la tarjeta se expande
+      this.foreCast();
+    }
+  }
 
   //funcion para que me salte una alerta cuando esta mal algun dato HAY QUE COMPLETARLA!!!!!!!!!!!!!!!!!!!!
   async presentAlert(){

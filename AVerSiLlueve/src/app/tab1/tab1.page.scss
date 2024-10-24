@@ -1,79 +1,107 @@
 .barra-busq {
-    --background: #2c2c2e; /* Color */
-    --border-radius: 20px; /* Bordes redon */
-    border: 1px solid #3a3a3c; /* Borde */
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-  }
-  
-  .custom-busq {
-    --padding-start: 0;
-    --background: transparent;
-    --color: white;
-  }
-  
-  
-  ion-button {
-    --padding-start: 0px;
-    --padding-end: 0px;
-    --icon-size: 24px; /* Tamaño del ícono */
-  }
-  
-  ion-icon {
-    color: #fff;
-    --icon-size: 20px;
-  }
-  
-  .weather-card {
-    --background: #2b2b2d; /* Fondo oscuro */
-    color: white;
-    border-radius: 15px; /* Bordes  */
-    padding: 10px;
-    
-    background-size: cover;
-    
-  }
-  .weather-card {
-    .temp-col {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      .temp-container {
-        display: grid;
-        place-items: center;  // Centra tanto horizontal como verticalmente
-        gap: 10px;            // Espacio entre la imagen y el texto
-  
-        h1 {
-          font-size: 2em;
-          margin: 0;
-        }
-      }
-    }
-  }
-  
-  h1 {
-    font-size: 22px;
-    margin: 0;
-  }
-  
-  .temp-col h1{
-    font-size: 48px;
-    margin: 0;
-    text-align: right;
-  }
-  
-  ion-icon {
-    color: #fff;
-    margin-right: 5px;
-  }
-  
-  p {
-    font-size: 14px;
-    margin: 0;
-    color: #d1d1d1;
-  }
-
-  .letra-color {
-    color: white;
+  --background: #64647a; /* Color del fondo */
+  --border-radius: 20px; /* Bordes redondeados */
+  border: 1px solid #3a3a3c; /* Borde */
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  width: 100%; /* Ancho completo */
+  height: 40px; /* Altura */
+  background-color: var(--background);
+  border-radius: var(--border-radius);
 }
+
+.custom-busq {
+  --padding-start: 0;
+  --background: transparent;
+  --color: white;
+}
+
+ion-button {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --icon-size: 24px; /* Tamaño del ícono */
+}
+
+ion-icon {
+  color: #fff;
+  --icon-size: 20px;
+}
+
+.weather-card {
+  --background: #64647a; /* Fondo oscuro */
+  color: white;
+  border-radius: 15px; /* Bordes redondeados */
+  padding: 10px;
+  background-size: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  max-width: 350px; /* Ancho máximo de la tarjeta */
+  width: 100%; /* Asegura que se adapte al tamaño */
+}
+
+.weather-card .temp-col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Separación entre elementos */
+}
+
+.temp-container {
+  display: grid;
+  place-items: center;  /* Centra horizontal y verticalmente */
+  gap: 10px; /* Espacio entre ícono y texto */
+}
+
+.temp-container h1 {
+  font-size: 48px; /* Tamaño de la temperatura */
+  margin: 0;
+}
+
+h1 {
+  font-size: 22px; /* Tamaño del título */
+  margin: 0;
+}
+
+p {
+  font-size: 14px; /* Tamaño del texto descriptivo */
+  margin: 0;
+  color: #d1d1d1;
+}
+
+.letra-color {
+  color: white;
+}
+.forecast-container {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #d8d8e6; /* Fondo oscuro similar al de la tarjeta */
+  border-radius: 15px; /* Bordes redondeados */
+  overflow-x: auto; /* Permite el scroll horizontal */
+  white-space: nowrap; /* Evita que los elementos se dividan en varias líneas */
+}
+
+.forecast-item {
+  display: inline-block; /* Los ítems deben estar en línea */
+  margin-right: 10px; /* Espacio entre ítems */
+  text-align: center; /* Centrar el contenido del ítem */
+}
+
+.forecast-item img {
+  width: 40px;  /* Tamaño del icono */
+  height: 40px; /* Tamaño del icono */
+}
+
+.forecast-item p {
+  font-size: 14px;
+  color: #222020;
+  margin: 5px 0;
+}
+
+.colorpron{
+  color: #222020;
+}
+
+.forecast-item .forecast-temp {
+  font-size: 16px;
+  color: #222020;
+}
+
