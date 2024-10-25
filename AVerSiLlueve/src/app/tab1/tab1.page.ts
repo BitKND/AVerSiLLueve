@@ -3,6 +3,9 @@ import { ProveedorClimaService } from '../services/proveedoresServices/proveedor
 import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
 import { AlertController } from '@ionic/angular';
+import { AuthenticationService } from '../services/authServices/authentication.service';
+import { Router } from '@angular/router';
+
 
 interface ClimaData {
   weather: { icon: string }[];  // Ajusta esto según la estructura de la API
@@ -15,7 +18,7 @@ interface ClimaData {
 })
 
 export class Tab1Page {
-
+  user:any;
   proveedor:any;
   proveedor2:any;
   proveedor3:any;
@@ -26,11 +29,15 @@ export class Tab1Page {
   lon="";
   isExpanded = false; // Para controlar si está expandido
   constructor(
+    public authService:AuthenticationService,
+    public route: Router,
     public alert:AlertController,
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService,
-  ) {}
+  )  {
+    this.user = authService.getProfile();
+  }
 
   ngOnInit(){}
   // -------------- Obtener clima por ciudad ------------
@@ -141,6 +148,15 @@ export class Tab1Page {
       stateCode.focus();
       countryCode.focus();
       return false;
+    }
+
+    async logout(){
+      this.authService.signOut().then(()=>{
+        localStorage.removeItem('ingresado');
+        this.route.navigate(['/sign-in']);
+      }).catch((error)=>{
+        console.log(error);
+      })
     }
 
 

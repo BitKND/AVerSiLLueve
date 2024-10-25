@@ -1,17 +1,60 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-menu contentId="main-content">
+    
+    <!-- ESPACIO PARA METODO DE TOMA DE USUARIO E INGRESO -->
+    <ion-header>
+      <ion-toolbar color="danger" >
+        <label >
+          Sebastian Otero
+        </label>
+        <br>
+        <label size="small">
+          Ultimo ingreso: 22/10/2024 19:03hs
+        </label>
+        
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <!-- Lista de botones del menu -->
+      <ion-list>
+        <!--  BOTON Clima -->
+          <ion-item class="ion-activatable ripple-parent rectangle" href="/tabs/tab1" >
+            <ion-ripple-effect></ion-ripple-effect>
+              <ion-icon slot="start" name="cloud-outline" aria-hidden="true" color="danger"></ion-icon>
+              <ion-label>Clima</ion-label>
+          </ion-item>
+        <!--  BOTON Favoritos -->      
+          <ion-item class="ion-activatable ripple-parent rectangle" href="/tabs/tab2">
+            <ion-ripple-effect></ion-ripple-effect>
+              <ion-icon slot="start" name="star-outline" aria-hidden="true" color="danger" ></ion-icon>
+              <ion-label class="favoritosselector">Favoritos</ion-label>
+          </ion-item>
+      
+        <!--  BOTON Configuracion -->      
+        <ion-item class="ion-activatable ripple-parent rectangle" href="/tabs/tab3">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-icon slot="start" name="construct-outline" aria-hidden="true" color="danger" ></ion-icon>
+          <ion-label>Configuración</ion-label>
+        </ion-item>
+      </ion-list>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+      <!--  BOTON Cerrar Sesion -->      
+      <div class="cerrarsesion">
+        <ion-button expand="full" color="danger" (click)="logout()">Cerrar sesión</ion-button>
+      </div>    
+    </ion-content>
+  </ion-menu>
+  
+  <!--  INICIO DE PAGINA -->      
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title size="large">Favoritos</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+  
 </ion-content>
