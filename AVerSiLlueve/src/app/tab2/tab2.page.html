@@ -12,6 +12,19 @@
       <ion-title size="large">Tab 2</ion-title>
     </ion-toolbar>
   </ion-header>
+  
+  <ion-list>
+    <ion-item *ngFor="let weather of weatherData">
+      <ion-label>
+        <h2>{{ weather.name }}</h2>
+        <p>Temperature: {{ weather.main.temp }} °C</p>
+        <p>Weather: {{ weather.weather[0].description }}</p>
+      </ion-label>
+      <ion-button (click)="removeFavorite(weather.name)" fill="clear">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <app-explore-container name=""></app-explore-container>
 </ion-content>

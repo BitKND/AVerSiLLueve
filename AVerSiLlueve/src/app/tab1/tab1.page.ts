@@ -5,6 +5,7 @@ import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedo
 import { AlertController } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 
+
 interface ClimaData {
   weather: { icon: string }[];  // Ajusta esto según la estructura de la API
 }
@@ -26,15 +27,34 @@ export class Tab1Page {
   lat="";
   lon="";
   isExpanded = false; // Para controlar si está expandido
+
+  weather: any = null;
+
+
+
   constructor(
     public alert:AlertController,
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService,
-    private geolocation:Geolocation,
+    
   ) {}
 
   ngOnInit(){}
+
+  toggleFavorite() {
+    if (this.esFavorito()) {
+      this.proveedorClimaService.borrarFavorito(this.city);
+    } else {
+      this.proveedorClimaService.agregarFavorito(this.city);
+    }
+  }
+
+  esFavorito(): boolean {
+    return this.proveedorClimaService.esFavorito(this.city);
+  }
+
+
 
 
   async getCurrentLocation(){
@@ -58,6 +78,7 @@ export class Tab1Page {
       throw(e);      
     }
   }
+  
   // -------------- Obtener clima por ciudad ------------
   ObtenerClima() {
     this.proveedorClimaService.ObtenerClima(this.city)
