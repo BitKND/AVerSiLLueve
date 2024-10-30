@@ -22,9 +22,9 @@ export class ProveedorClimaService {
   }
 
   //CREAMOS METODO PARA OBTENER DATOS API
-  currentWeather(lat: string , lon: string)
+  currentWeather(lat: number , lon: number)
   {
-    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid=${this.apiKey}`);
+    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}`);
   }
 
   // ObtenerClima(city: string){

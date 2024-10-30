@@ -75,7 +75,50 @@
     </ion-button>
   </ion-card-content>
 
-  <ion-button fill="clear" (click)="getCurrentLocation()" class="letra-color"> Posicion Actual </ion-button>
+  <!-- <ion-button fill="clear" (click)="getCurrentLocation()" class="letra-color"> Posicion Actual </ion-button> -->
+
+  <ion-card class="weather-card" *ngIf="proveedor4 !== null" (click)="toggleExpand()">
+    <ion-card-content>
+      <ion-grid>
+        <!-- nombre, ubicacion y temperatura -->
+        <ion-row>
+          <ion-col size="9">
+            <h1>{{ proveedor4.name }}</h1>
+            <p>{{ proveedor4.weather[0].description }}</p>
+          </ion-col>
+          <ion-col size="3" class="temp-col">
+            <!-- temperatura e icono -->
+            <div class="temp-container">
+              <img src="https://openweathermap.org/img/wn/{{ imageURL }}@2x.png" alt="weather-image"
+                style="width: 60px; height: 60px;" />
+              <h1>{{ (proveedor4.main.temp - 273.15).toFixed(0) }}°</h1>
+            </div>
+          </ion-col>
+        </ion-row>
+        <!-- Fila para mostrar la temperatura max y min -->
+        <ion-row>
+          <ion-col>
+            <p>
+              Máxima: {{ (proveedor4.main.temp_max - 273.15).toFixed(0) }}° Mínima:
+              {{ (proveedor4.main.temp_min - 273.15).toFixed(0) }}°
+            </p>
+          </ion-col>
+        </ion-row>
+
+      
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-content>
+    <div *ngIf="proveedor4 !== null">
+      <h2>Temperatura actual: {{ proveedor.main.temp }} °C</h2>
+    </div>
+
+    <div *ngIf="proveedor4 === null">
+      <h2>Cargando temperatura...</h2>
+    </div>
+  </ion-content>
 
 
 

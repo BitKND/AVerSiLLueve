@@ -4,6 +4,7 @@ import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedo
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
 import { AlertController } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
+import { GeolocationService } from '../services/Geolocation/geolocation-service.service';
 
 
 interface ClimaData {
@@ -21,7 +22,7 @@ export class Tab1Page {
   proveedor:any;
   proveedor2:any;
   proveedor3:any;
-  proveedor4:any;
+  proveedor4:number | null = null;
   city="";
   imageURL="";
   lat="";
@@ -37,10 +38,26 @@ export class Tab1Page {
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService,
+    private geolocationService: GeolocationService
     
   ) {}
 
-  ngOnInit(){}
+  async ngOnInit(){
+    await this.geolocationService.getCurrentLocation();
+    const lat = this.geolocationService.lat;
+    const lon = this.geolocationService.lon;
+
+    if (lat && lon) {
+      this.proveedorClimaService.currentWeather(lat, lon).subscribe(
+        (data: any) => {
+          this.proveedor4 = data;
+        },
+        (error) => {
+          console.error('Error obteniendo datos del clima', error);
+        }
+      );}
+
+  }
 
   toggleFavorite() {
     if (this.esFavorito()) {
@@ -72,7 +89,9 @@ export class Tab1Page {
         timeout: 10000,
         enableHighAccuracy: true
       };
-      return await Geolocation.getCurrentPosition(options);            
+      return await Geolocation.getCurrentPosition(options);
+      
+
     } catch (e) {
       console.log(e);
       throw(e);      
@@ -93,7 +112,7 @@ export class Tab1Page {
 
   // ------------------------------ proveedor 1 (temperatura actual segun lat y lon) ------------------------------
   //METODO 1 PARA OBTENER API DE CLIMA 
-  currentWeather(lat: string, lon: string) {
+/*   currentWeather(lat: string, lon: string) {
     this.proveedorClimaService.currentWeather(lat, lon)
     .subscribe((data: any)=> {
         console.log(data);
@@ -101,7 +120,7 @@ export class Tab1Page {
       },
       err => console.log(err)
     )
-  }
+  } */
 
   // ------------------------------ proveedor 2 (temperatura actual segun cityName, stateCode, countryCode) ------------------------------
   //METODO Geocoding API
@@ -141,7 +160,7 @@ export class Tab1Page {
     }
   }
 
-  //funcion para que me salte una alerta cuando esta mal algun dato HAY QUE COMPLETARLA!!!!!!!!!!!!!!!!!!!!
+  //funcion para que me salte una alerta cuando esta mal algun dato
   async presentAlert(){
     const alert =  await this.alert.create({
       header: '',
@@ -153,57 +172,5 @@ export class Tab1Page {
   }
 
 
-
-
-  //METODO PARA LLAMAR EN HTML
-  //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
-  submitLocation1(lat: HTMLInputElement, lon: HTMLInputElement){
-    if(lat&&lon){
-      this.currentWeather(lat.value,lon.value);
-      lat.value ="";
-      lon.value ="";
-    }else{
-      this.presentAlert();
-    }
-    lat.focus();
-    lon.focus();
-    return false;
-  }
- 
-
-
-  //METODO PARA LLAMAR EN HTML
-  //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
-    submitLocation2(cityName: HTMLInputElement, stateCode: HTMLInputElement, countryCode: HTMLInputElement){
-      if(cityName&&stateCode&&countryCode){
-        this.geocoding(cityName.value,stateCode.value,countryCode.value);
-        cityName.value ="";
-        stateCode.value ="";
-        countryCode.value ="";
-      }else{
-        this.presentAlert();
-      }
-      cityName.focus();
-      stateCode.focus();
-      countryCode.focus();
-      return false;
-    }
-
-
-
-  //METODO PARA LLAMAR EN HTML
-  //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
-/*   submitLocation3(lat: HTMLInputElement, lon: HTMLInputElement){
-    if(lat&&lon){
-      this.getClima3(lat.value,lon.value);
-      lat.value ="";
-      lon.value ="";
-    }else{
-      this.presentAlert();
-    }
-    lat.focus();
-    lon.focus();
-    return false;
-  }   */
 
 }
