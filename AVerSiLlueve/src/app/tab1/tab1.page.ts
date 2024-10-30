@@ -110,17 +110,6 @@ export class Tab1Page {
     });
   }
 
-  // ------------------------------ proveedor 1 (temperatura actual segun lat y lon) ------------------------------
-  //METODO 1 PARA OBTENER API DE CLIMA 
-/*   currentWeather(lat: string, lon: string) {
-    this.proveedorClimaService.currentWeather(lat, lon)
-    .subscribe((data: any)=> {
-        console.log(data);
-        this.proveedor4 = data 
-      },
-      err => console.log(err)
-    )
-  } */
 
   // ------------------------------ proveedor 2 (temperatura actual segun cityName, stateCode, countryCode) ------------------------------
   //METODO Geocoding API
