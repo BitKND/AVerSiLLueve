@@ -59,11 +59,10 @@
   <!--  barra de busqueda -->
   <ion-item class="barra-busq">
     <ion-icon name="search-outline" slot="start"></ion-icon>
-    
-    <ion-input
-      class="custom-busq" placeholder="Buscar ciudad" type="text" [(ngModel)]="city">
+
+    <ion-input class="custom-busq" placeholder="Buscar ciudad" type="text" [(ngModel)]="city">
     </ion-input>
-    
+
     <!-- Boton -->
     <ion-button fill="clear" (click)="ObtenerClima()" class="letra-color"> Buscar </ion-button>
   </ion-item>
@@ -81,11 +80,8 @@
           <ion-col size="3" class="temp-col">
             <!-- temperatura e icono -->
             <div class="temp-container">
-              <img
-                src="https://openweathermap.org/img/wn/{{ imageURL }}@2x.png"
-                alt="weather-image"
-                style="width: 60px; height: 60px;"
-              />
+              <img src="https://openweathermap.org/img/wn/{{ imageURL }}@2x.png" alt="weather-image"
+                style="width: 60px; height: 60px;" />
               <h1>{{ (proveedor.main.temp - 273.15).toFixed(0) }}°</h1>
             </div>
           </ion-col>
@@ -104,14 +100,14 @@
         <ion-row *ngIf="isExpanded && proveedor3">
           <div class="forecast-container" *ngIf="proveedor3">
             <h2 class="colorpron">Pronóstico</h2>
-          
+
             <!--  elementos del pronóstico -->
             <div class="forecast-item" *ngFor="let item of proveedor3.list">
               <p>{{ item.dt_txt | date: 'shortTime' }}</p>
-              
+
               <!-- Icono del clima -->
               <img [src]="'https://openweathermap.org/img/wn/' + item.weather[0].icon + '@2x.png'" alt="forecast-icon">
-              
+
               <!-- Temp -->
               <div class="forecast-temp">
                 <p>{{ (item.main.temp_max - 273.15).toFixed(0) }}°</p>
@@ -123,8 +119,61 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-card-content *ngIf="proveedor">
+    <ion-button (click)="toggleFavorite()">
+      <ion-icon [name]="esFavorito() ? 'heart' : 'heart-outline'"></ion-icon>
+      {{ esFavorito() ? 'Unfavorite' : 'Favorite' }}
+    </ion-button>
+  </ion-card-content>
 
-<!-- 
+  <!-- <ion-button fill="clear" (click)="getCurrentLocation()" class="letra-color"> Posicion Actual </ion-button> -->
+
+  <ion-card class="weather-card" *ngIf="proveedor4 !== null">
+    <ion-card-content>
+      <ion-grid>
+        <!-- nombre, ubicacion y temperatura -->
+        <ion-row>
+          <ion-col size="9">
+            <h1>{{ proveedor4.name }}</h1>
+            <p>{{ proveedor4.weather[0].description }}</p>
+          </ion-col>
+          <ion-col size="3" class="temp-col">
+            <!-- temperatura e icono -->
+            <div class="temp-container">
+              <img src="https://openweathermap.org/img/wn/{{ imageURL }}@2x.png" alt="weather-image"
+                style="width: 60px; height: 60px;" />
+              <h1>{{ (proveedor4.main.temp - 273.15).toFixed(0) }}°</h1>
+            </div>
+          </ion-col>
+        </ion-row>
+        <!-- Fila para mostrar la temperatura max y min -->
+        <ion-row>
+          <ion-col>
+            <p>
+              Máxima: {{ (proveedor4.main.temp_max - 273.15).toFixed(0) }}° Mínima:
+              {{ (proveedor4.main.temp_min - 273.15).toFixed(0) }}°
+            </p>
+          </ion-col>
+        </ion-row>
+
+      
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-content>
+    <div *ngIf="proveedor4 !== null">
+      <h2>Temperatura actual: {{ proveedor.main.temp }} °C</h2>
+    </div>
+
+    <div *ngIf="proveedor4 === null">
+      <h2>Cargando temperatura...</h2>
+    </div>
+  </ion-content>
+
+
+
+  <!-- 
   <ion-item class="barra-busq">
     <ion-icon name="search-outline" slot="start"></ion-icon>    
     <ion-input
@@ -143,10 +192,10 @@
 
   </ion-card> -->
 
-  
+
 
   <!-- METODO 1-->
-    <!--  <div class="row">
+  <!--  <div class="row">
     <div class="col-md-6">
       <div card class="card-body">
         <ion-item>

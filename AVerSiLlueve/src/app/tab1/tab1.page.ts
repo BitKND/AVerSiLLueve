@@ -3,8 +3,10 @@ import { ProveedorClimaService } from '../services/proveedoresServices/proveedor
 import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
 import { AlertController } from '@ionic/angular';
-import { AuthenticationService } from '../services/authServices/authentication.service';
+import { Geolocation } from '@capacitor/geolocation';
+import { GeolocationService } from '../services/Geolocation/geolocation-service.service';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../services/authServices/authentication.service';
 
 
 interface ClimaData {
@@ -22,12 +24,17 @@ export class Tab1Page {
   proveedor:any;
   proveedor2:any;
   proveedor3:any;
-  proveedor4:any;
+  proveedor4:number | null = null;
   city="";
   imageURL="";
   lat="";
   lon="";
   isExpanded = false; // Para controlar si está expandido
+
+  weather: any = null;
+
+
+
   constructor(
     public authService:AuthenticationService,
     public route: Router,
@@ -35,11 +42,66 @@ export class Tab1Page {
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService,
-  )  {
-    this.user = authService.getProfile();
+    private geolocationService: GeolocationService
+    
+  ) {}
+
+  async ngOnInit(){
+    await this.geolocationService.getCurrentLocation();
+    const lat = this.geolocationService.lat;
+    const lon = this.geolocationService.lon;
+
+    if (lat && lon) {
+      this.proveedorClimaService.currentWeather(lat, lon).subscribe(
+        (data: any) => {
+          this.proveedor4 = data;
+        },
+        (error) => {
+          console.error('Error obteniendo datos del clima', error);
+        }
+      );}
+
   }
 
-  ngOnInit(){}
+  toggleFavorite() {
+    if (this.esFavorito()) {
+      this.proveedorClimaService.borrarFavorito(this.city);
+    } else {
+      this.proveedorClimaService.agregarFavorito(this.city);
+    }
+  }
+
+  esFavorito(): boolean {
+    return this.proveedorClimaService.esFavorito(this.city);
+  }
+
+
+
+
+  async getCurrentLocation(){
+    try {
+      const permissionStatus = await Geolocation.checkPermissions();
+      console.log('Permission status: ', permissionStatus.location);
+      if(permissionStatus.location != 'granted') {
+        const requestStatus = await Geolocation.requestPermissions();
+        if(requestStatus.location != 'granted'){
+          return null;
+        }
+      }
+      let options: PositionOptions = {
+        maximumAge: 3000,
+        timeout: 10000,
+        enableHighAccuracy: true
+      };
+      return await Geolocation.getCurrentPosition(options);
+      
+
+    } catch (e) {
+      console.log(e);
+      throw(e);      
+    }
+  }
+  
   // -------------- Obtener clima por ciudad ------------
   ObtenerClima() {
     this.proveedorClimaService.ObtenerClima(this.city)
@@ -52,17 +114,6 @@ export class Tab1Page {
     });
   }
 
-  // ------------------------------ proveedor 1 (temperatura actual segun lat y lon) ------------------------------
-  //METODO 1 PARA OBTENER API DE CLIMA 
-  currentWeather(lat: string, lon: string) {
-    this.proveedorClimaService.currentWeather(lat, lon)
-    .subscribe((data: any)=> {
-        console.log(data);
-        this.proveedor4 = data 
-      },
-      err => console.log(err)
-    )
-  }
 
   // ------------------------------ proveedor 2 (temperatura actual segun cityName, stateCode, countryCode) ------------------------------
   //METODO Geocoding API
@@ -102,7 +153,7 @@ export class Tab1Page {
     }
   }
 
-  //funcion para que me salte una alerta cuando esta mal algun dato HAY QUE COMPLETARLA!!!!!!!!!!!!!!!!!!!!
+  //funcion para que me salte una alerta cuando esta mal algun dato
   async presentAlert(){
     const alert =  await this.alert.create({
       header: '',
@@ -113,67 +164,14 @@ export class Tab1Page {
      alert.present();
   }
 
-
-
-
-  //METODO PARA LLAMAR EN HTML
-  //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
-  submitLocation1(lat: HTMLInputElement, lon: HTMLInputElement){
-    if(lat&&lon){
-      this.currentWeather(lat.value,lon.value);
-      lat.value ="";
-      lon.value ="";
-    }else{
-      this.presentAlert();
-    }
-    lat.focus();
-    lon.focus();
-    return false;
+  async logout(){
+    this.authService.signOut().then(()=>{
+      localStorage.removeItem('ingresado');
+      this.route.navigate(['/sign-in']);
+    }).catch((error)=>{
+      console.log(error);
+    })
   }
- 
 
-
-  //METODO PARA LLAMAR EN HTML
-  //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
-    submitLocation2(cityName: HTMLInputElement, stateCode: HTMLInputElement, countryCode: HTMLInputElement){
-      if(cityName&&stateCode&&countryCode){
-        this.geocoding(cityName.value,stateCode.value,countryCode.value);
-        cityName.value ="";
-        stateCode.value ="";
-        countryCode.value ="";
-      }else{
-        this.presentAlert();
-      }
-      cityName.focus();
-      stateCode.focus();
-      countryCode.focus();
-      return false;
-    }
-
-    async logout(){
-      this.authService.signOut().then(()=>{
-        localStorage.removeItem('ingresado');
-        this.route.navigate(['/sign-in']);
-      }).catch((error)=>{
-        console.log(error);
-      })
-    }
-
-
-
-  //METODO PARA LLAMAR EN HTML
-  //original: submitLocation(cityName: HTMLInputElement, countryCode: HTMLInputElement){
-/*   submitLocation3(lat: HTMLInputElement, lon: HTMLInputElement){
-    if(lat&&lon){
-      this.getClima3(lat.value,lon.value);
-      lat.value ="";
-      lon.value ="";
-    }else{
-      this.presentAlert();
-    }
-    lat.focus();
-    lon.focus();
-    return false;
-  }   */
 
 }

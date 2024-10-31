@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
+  
+  favoriteCities: string[] = [];
+  weatherData: any[] = [];
 
   user:any;
 

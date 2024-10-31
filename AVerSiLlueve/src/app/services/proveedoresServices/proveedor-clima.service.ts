@@ -10,21 +10,21 @@ export class ProveedorClimaService {
   apiKey = 'c760af7a74a4ec3543b1ddd7f09e9636'; //ES CONSTANTE, POR ESO LA DECLARO ACA
   URI : string = '';
 
+  private favoritos: any[] = [];
+
   constructor(
     public http: HttpClient
   ) { 
     console.log('Hola Proveedor 1'); 
-    //Yo lo habia pensado como:
-    //this.URI=`https://api.openweathermap.org/data/2.5/weather?lat={${this.lat}}&lon={${this.lon}}&appid=${this.apiKey}`;
-    //en el video lo muestra como:
-    //this.URI=`https://api.openweathermap.org/data/2.5/weather?&appid=${this.apiKey}&units=metric&q=`;
-    //this.URI=`https://api.openweathermap.org/data/2.5/weather?q={this.city}&appid={this.apiKey}}`
+    const storedFavorites = localStorage.getItem('favoritos');
+    this.favoritos = storedFavorites ? JSON.parse(storedFavorites) : [];
+ 
   }
 
   //CREAMOS METODO PARA OBTENER DATOS API
-  currentWeather(lat: string , lon: string)
+  currentWeather(lat: number , lon: number)
   {
-    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?lat={${lat}}&lon={${lon}}&appid=${this.apiKey}`);
+    return this.http.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}`);
   }
 
   // ObtenerClima(city: string){
@@ -33,6 +33,30 @@ export class ProveedorClimaService {
   ObtenerClima(city: string) {
     const url = `${this.URI}?q=${city}&appid=${this.apiKey}&units=metric&lang=es`; 
     return this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}&lang=es`);// idioma español el detalle del clima
+  }
+
+  agregarFavorito(city: string) {
+    if (!this.esFavorito(city)) {
+      this.favoritos.push(city);
+      this.actualizarStorage();
+    }
+  }
+
+  borrarFavorito(city: string) {
+    this.favoritos = this.favoritos.filter(fav => fav !== city);
+    this.actualizarStorage();
+  }
+
+  esFavorito(city: string): boolean {
+    return this.favoritos.includes(city);
+  }
+
+  obtenerFavoritos(): string[] {
+    return this.favoritos;
+  }
+
+  private actualizarStorage() {
+    localStorage.setItem('favorites', JSON.stringify(this.favoritos));
   }
 }
 
