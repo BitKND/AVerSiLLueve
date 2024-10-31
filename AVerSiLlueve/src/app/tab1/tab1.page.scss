@@ -35,7 +35,7 @@ ion-icon {
   padding: 10px;
   background-size: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
-  max-width: 350px; /* Ancho máximo de la tarjeta */
+  max-width: 395px; /* Ancho máximo de la tarjeta */
   width: 100%; /* Asegura que se adapte al tamaño */
 }
 
@@ -103,5 +103,9 @@ p {
 .forecast-item .forecast-temp {
   font-size: 16px;
   color: #222020;
+}
+
+.colorbutton{
+  color: #64647a;
 }
 

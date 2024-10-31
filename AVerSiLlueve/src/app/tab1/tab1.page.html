@@ -110,15 +110,16 @@
     </ion-card-content>
   </ion-card>
 
+  <!-- ESTO YA ESTA CON EL GPS DEL IONCARD CON EL GPS
   <ion-content>
     <div *ngIf="proveedor4 !== null">
-      <h2>Temperatura actual: {{ proveedor.main.temp }} °C</h2>
+      <h2>Temperatura actual: {{ (proveedor.main.temp - 273.15) | number:'1.1-1' }} °C</h2>
     </div>
 
     <div *ngIf="proveedor4 === null">
       <h2>Cargando temperatura...</h2>
     </div>
-  </ion-content>
+  </ion-content> -->
 
 
 
