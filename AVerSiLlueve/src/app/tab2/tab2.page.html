@@ -1,26 +1,18 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header collapse="condense" class="custom-header">
     <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
+      <ion-title size="" class="custom-title">Tu clima favorito</ion-title>
     </ion-toolbar>
   </ion-header>
   
-  <ion-list>
-    <ion-item *ngFor="let weather of weatherData">
-      <ion-label>
+  <ion-list class="custom-list">
+    <ion-item *ngFor="let weather of weatherData" class="custom-item">
+      <ion-label class="custom-label">
         <h2>{{ weather.name }}</h2>
-        <p>Temperature: {{ weather.main.temp }} °C</p>
-        <p>Weather: {{ weather.weather[0].description }}</p>
+        <p>Temperatura: {{ (weather.main.temp - 273.15).toFixed(0) }} °C</p>
+        <p>Descripcion: {{ weather.weather[0].description }}</p>
       </ion-label>
-      <ion-button (click)="removeFavorite(weather.name)" fill="clear">
+      <ion-button (click)="removeFavorite(weather.name)" fill="clear" class="custom-button">
         <ion-icon name="trash"></ion-icon>
       </ion-button>
     </ion-item>
