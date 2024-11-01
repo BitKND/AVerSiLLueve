@@ -28,6 +28,7 @@ export class Tab1Page {
   lat="";
   lon="";
   isExpanded = false; // Para controlar si está expandido
+  isFavorite: boolean = false;
 
   weather: any = null;
 

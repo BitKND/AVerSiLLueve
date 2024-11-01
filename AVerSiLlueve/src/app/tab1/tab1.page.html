@@ -67,15 +67,17 @@
       </ion-grid>
     </ion-card-content>
   </ion-card>
-
+<!-- Boton para almacenar favoritos-->
   <ion-card-content *ngIf="proveedor">
-    <ion-button (click)="toggleFavorite()">
+    <ion-toggle (ionChange)="toggleFavorite()">
       <ion-icon [name]="esFavorito() ? 'heart' : 'heart-outline'"></ion-icon>
       {{ esFavorito() ? 'Unfavorite' : 'Favorite' }}
-    </ion-button>
+    </ion-toggle> 
+
+
   </ion-card-content>
 
-  <!-- <ion-button fill="clear" (click)="getCurrentLocation()" class="letra-color"> Posicion Actual </ion-button> -->
+  
 
   <ion-card class="weather-card" *ngIf="proveedor4 !== null">
     <ion-card-content>
@@ -109,6 +111,12 @@
       </ion-grid>
     </ion-card-content>
   </ion-card>
+
+<ion-content>
+  <div *ngIf="proveedor4 === null">
+    <h2>Cargando temperatura...</h2>
+  </div>
+</ion-content>
 
   <!-- ESTO YA ESTA CON EL GPS DEL IONCARD CON EL GPS
   <ion-content>
