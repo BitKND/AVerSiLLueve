@@ -4,7 +4,7 @@ Una aplicación hibrida que brinda el clima acorde a la geolocalización de tu d
 ## Colaboradores
 
 - Sebastian Otero
-- Lucas Fernández
+- Cristian Sagardia
 - Luciano Cannici
 - Arthur Cañari
 
