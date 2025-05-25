@@ -18,6 +18,8 @@ import { Proveedor3ClimaService } from '../app/services/proveedoresServices/prov
 
 import { HttpClientModule } from '@angular/common/http';
 
+
+
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, AngularFireModule, AngularFireAuthModule, AngularFireModule.initializeApp(environment.firebase), HttpClientModule],

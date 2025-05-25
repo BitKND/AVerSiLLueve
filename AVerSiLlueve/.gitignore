@@ -8,7 +8,7 @@
 *.tmp.*
 UserInterfaceState.xcuserstate
 $RECYCLE.BIN/
-
+config.json
 *.log
 log.txt
 

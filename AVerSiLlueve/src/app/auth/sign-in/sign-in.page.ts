@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authServices/authentication.service';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
@@ -18,10 +17,10 @@ import { NavController } from '@ionic/angular';
 export class SignInPage implements OnInit {
 
   //Inicializo firebase
-  oApp = initializeApp(environment.firebase);
+  //oApp = initializeApp(environment.firebase);
 
   // Initialize Firebase Authentication and get a reference to the service
-  oAuth = getAuth(this.oApp);
+  //oAuth = getAuth(this.oApp);
 
   loginForm: FormGroup;
 
