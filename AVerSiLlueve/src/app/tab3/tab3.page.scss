@@ -11,7 +11,17 @@ ion-item {
   }
   
   ion-button {
-    margin-top: 20px;
+  // Reinicia propiedades clave que podrían causar problemas
+  all: unset !important; // Esto intenta resetear la mayoría de los estilos
+  display: block !important; // Asegura que ocupe espacio
+  width: 150px !important; // Dale un tamaño fijo
+  height: 50px !important; // Dale un tamaño fijo
+  background-color: red !important; // Hazlo muy visible
+  color: white !important; // Texto contrastante
+  border: 2px solid black !important; // Borde claro
+  cursor: pointer !important; // Para indicar que es clickeable
+  z-index: 9999 !important; // Asegura que esté por encima de todo
+  pointer-events: auto !important; // ¡Crucial para que reciba clics!
   }
   
   ion-list {
