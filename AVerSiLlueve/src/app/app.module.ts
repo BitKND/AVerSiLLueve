@@ -18,6 +18,13 @@ import { Proveedor3ClimaService } from '../app/services/proveedoresServices/prov
 
 import { HttpClientModule } from '@angular/common/http';
 
+// --- AÑADIR LAS SIGUIENTES LÍNEAS PARA AMPLIFY ---
+import { Amplify } from 'aws-amplify';
+import awsconfig from '../aws-config'; 
+// Configura Amplify directamente al cargar el módulo
+Amplify.configure(awsconfig);
+// --- FIN DE LAS LÍNEAS DE AMPLIFY ---
+
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, AngularFireModule, AngularFireAuthModule, AngularFireModule.initializeApp(environment.firebase), HttpClientModule],

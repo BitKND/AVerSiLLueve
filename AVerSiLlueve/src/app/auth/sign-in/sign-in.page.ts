@@ -1,14 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/services/authServices/authentication.service';
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { environment } from 'src/environments/environment';
+
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
-import { NavController } from '@ionic/angular';
+import { LoadingController, AlertController, NavController } from '@ionic/angular';
 
+// Importa tu AuthService unificado para interactuar con AWS Amplify Auth
+import { AuthService } from  'src/app/services/authServices/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -17,102 +14,134 @@ import { NavController } from '@ionic/angular';
 })
 export class SignInPage implements OnInit {
 
-  //Inicializo firebase
-  oApp = initializeApp(environment.firebase);
-
-  // Initialize Firebase Authentication and get a reference to the service
-  oAuth = getAuth(this.oApp);
-
-  loginForm: FormGroup;
-
-
-  private _auth = inject(AuthenticationService);
+  // FormGroup para el formulario de inicio de sesión
+  loginForm!: FormGroup;
 
   constructor(
-    private navCtrl:NavController,
-    private alert: AlertController,
-    public formBuilder: FormBuilder,
-    public loadingCtrl: LoadingController,
-    private roter : Router,
-    public authService:AuthenticationService,
-  ) { 
-  }
-//Se establecen los patrones a cumplir en email y contraseña
-  async ngOnInit() {
+    private navCtrl: NavController,       // Controlador de navegación de Ionic (útil para pop, push)
+    private alertCtrl: AlertController,   // Controlador para mostrar alertas al usuario
+    private formBuilder: FormBuilder,     // Constructor de formularios reactivos de Angular
+    private loadingCtrl: LoadingController, // Controlador para mostrar indicadores de carga
+    private router: Router,               // Router de Angular para navegación
+    private authService: AuthService      // Tu servicio de autenticación con Amplify
+  ) { }
+
+  ngOnInit() {
+    // Inicializa el formulario de inicio de sesión con sus controles y validaciones.
     this.loginForm = this.formBuilder.group({
-      email:['', [
-        Validators.required,
-        Validators.email,
-        Validators.pattern("[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$")
+      email: ['', [
+        Validators.required,        // El email es requerido
+        Validators.email,           // Debe ser un formato de email válido
+        Validators.pattern("[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$") // Patrón regex para validación de email
       ]],
-      password:['',[
-      Validators.required,
-      Validators.pattern("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-8])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}")
-    ]]
-    })
+      password: ['', [
+        Validators.required,        // La contraseña es requerida
+        Validators.minLength(8)     // Longitud mínima para la contraseña.
+        // No se requiere un patrón estricto aquí; Cognito valida la complejidad.
+      ]]
+    });
   }
 
-  get errorControl(){
+  /**
+   * Getter conveniente para acceder a los controles del formulario en la plantilla HTML.
+   * Simplifica el acceso a los errores de validación.
+   */
+  get errorControl() {
     return this.loginForm.controls;
   }
 
-    /*El try catch intenta hacer uso de signinwithgoogle declarado en authenthication service, si es correcto se abre el pop up
-  para elegir la cuenta de google con la cual iniciar sesion.
-  En el caso de algun error, el catch lo atrapa y se muestra por consola que ocurrio un error
-  Se agrega una flag almacenada en localstorage llamada 'ingresado'. Se hace uso de esto para establecer los guards y no permitir ingreso a la app sin iniciar sesion*/
+  /**
+   * Maneja el intento de inicio de sesión con Google.
+   * La integración de Google Sign-In con Amplify/Cognito requiere configuración adicional (proveedor de identidad).
+   * Por ahora, solo muestra un mensaje informativo.
+   */
   async loginGoogle() {
-    try {
-      await this._auth.signInWithGoogle();
-
-      localStorage.setItem('ingresado','true');
-      this.roter.navigate(['/tabs/tab1']);
-
-    } catch (error) {
-      console.log(error);
-    }
-
-
-  }
-  async alertaBasica(){
-
-    const alert = await this.alert.create({
-      header: 'Email o contraseña incorrectos',
-      message: 'Por favor ingrese un email o contraseña validos',
+    const alert = await this.alertCtrl.create({
+      header: 'Google Sign-In',
+      message: 'La integración de Google Sign-In con AWS Amplify/Cognito requiere configuración adicional en la consola de AWS (proveedores de identidad). Esta funcionalidad está deshabilitada temporalmente.',
       buttons: ['Entendido'],
-
     });
-     alert.present();
+    await alert.present();
   }
 
-  /*Creamos una constante "loading" (instancia de carga), mientras cargue se inicia el try catch
-  Si el user es correcto, el loading se cierra y la aplicación se redirige a la pagina de inicio "tabs"
-  En caso de ser valores erroneos, devuelve alerta de aviso
-  Si el error es otro, el catch lo atrapa y lo muestra por consola cerrando el loading tambien
-  Se agrega una flag almacenada en localstorage llamada 'ingresado'. Se hace uso de esto para establecer los guards y no permitir ingreso a la app sin iniciar sesion*/
-  async login(){
-    const loading = await this.loadingCtrl.create();
+  /**
+   * Muestra una alerta Ionic personalizada al usuario.
+   * @param header El título de la alerta.
+   * @param message El mensaje principal de la alerta.
+   */
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: message,
+      buttons: ['Entendido'],
+    });
+    await alert.present();
+  }
+
+  /**
+   * Maneja el proceso de inicio de sesión con email y contraseña.
+   * Valida el formulario, muestra un spinner de carga y llama al AuthService.
+   */
+  async login() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Iniciando sesión...',
+    });
     await loading.present();
 
-    try {      
-      
-      const user = await this.authService.loginUser(this.loginForm.value.email,this.loginForm.value.password)
+    if (this.loginForm.invalid) {
+      await loading.dismiss();
+      this.showAlert('Formulario inválido', 'Por favor, ingrese un correo electrónico y contraseña válidos.');
+      return;
+    }
 
-      if(user){
-        loading.dismiss();
-        localStorage.setItem('ingresado','true');
-        this.roter.navigate(['/tabs/tab1']);
-        
-      } else{
-        this.alertaBasica();
+    const { email, password } = this.loginForm.value;
+
+    try {
+      // Llama al método userSignIn de tu AuthService para autenticar al usuario con Amplify.
+      await this.authService.userSignIn(email, password);
+
+      // Si la llamada a userSignIn es exitosa, el AuthService ya maneja la redirección
+      // a '/tabs' a través de su Hub Listener y el AuthGuard.
+      // Por lo tanto, no se necesita una redirección explícita aquí.
+
+      await loading.dismiss();
+
+    } catch (error: any) {
+      await loading.dismiss();
+      let errorMessage = 'Ha ocurrido un error al iniciar sesión. Por favor, intenta de nuevo.';
+
+      // Manejo de errores específicos de AWS Amplify/Cognito para dar feedback al usuario.
+      if (error.name === 'UserNotFoundException' || error.name === 'NotAuthorizedException') {
+        errorMessage = 'Credenciales inválidas. Usuario o contraseña incorrectos.';
+      } else if (error.name === 'UserNotConfirmedException') {
+        errorMessage = 'Tu cuenta no ha sido confirmada. Por favor, confirma tu correo electrónico.';
+        // Opcional: Podrías redirigir al usuario a la página de confirmación de registro aquí
+        // para que pueda confirmar o reenviar el código.
+        // this.router.navigateByUrl('/auth/confirm-sign-up', { state: { email: email } });
+      } else if (error.name === 'EmptySignInUsername' || error.name === 'EmptySignInPassword') {
+        errorMessage = 'El correo electrónico y la contraseña no pueden estar vacíos.';
+      } else if (error.name === 'LimitExceededException') {
+        errorMessage = 'Demasiados intentos fallidos. Por favor, espera un momento y vuelve a intentarlo.';
+      } else {
+        errorMessage = `Error de autenticación: ${error.message || 'Error desconocido'}`;
       }
-    
-    } catch (error) {
-      console.log(error);
-      this.alertaBasica();
-      loading.dismiss();
+
+      this.showAlert('Fallo al iniciar sesión', errorMessage);
+      console.error('Error al iniciar sesión con Amplify:', error);
     }
   }
 
+  /**
+   * Navega a la página de registro de usuarios.
+   */
+  goToSignUp() {
+    this.router.navigateByUrl('/sign-up');
+  }
 
-
+  /**
+   * Navega a la página de recuperación de contraseña.
+   */
+  goToResetPassword() {
+    this.router.navigateByUrl('/reset-password');
+  }
 }
