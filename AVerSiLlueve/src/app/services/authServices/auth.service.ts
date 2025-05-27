@@ -1,4 +1,4 @@
-// src/app/services/auth.service.ts
+
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -173,9 +173,16 @@ export class AuthService {
    * Cierra la sesión del usuario actual en Amazon Cognito.
    * @returns Una promesa que se resuelve cuando la sesión ha sido cerrada.
    */
-  async userSignOut(): Promise<any> {
-    return signOut();
+  async logout(): Promise<void> { // Cambiado a 'void' porque no devuelve un valor útil directamente
+  console.log('AuthService: Iniciando proceso de Auth.signOut().'); // Log para depuración
+  try {
+    await signOut(); // Esta es la llamada a la función de Amplify Auth
+    console.log('AuthService: Auth.signOut() completado exitosamente.'); // Log de éxito
+  } catch (error: any) {
+    console.error('AuthService: Error durante Auth.signOut():', error); // Log de error
+    throw error; // Re-lanza el error para que el componente que llama lo maneje
   }
+}
 
   /**
    * Inicia el flujo de recuperación de contraseña.

@@ -29,6 +29,7 @@ export class Tab3Page implements OnInit {
    * El AuthService se encargará de comunicarse con Cognito y redirigir al usuario.
    */
   async logout() {
+    console.log('Tab3Page: Botón de Cerrar Sesión CLICKEADO.'); 
     const loading = await this.loadingController.create({
       message: 'Cerrando sesión...',
     });
@@ -38,7 +39,8 @@ export class Tab3Page implements OnInit {
       // Llama al método userSignOut de tu AuthService.
       // El AuthService ya tiene la lógica para llamar a Amplify.Auth.signOut()
       // y, a través del Hub, redirigir al usuario a la página de inicio de sesión (/sign-in).
-      await this.authService.userSignOut();
+      await this.authService.logout();
+
 
       // No es necesario añadir redirección aquí (ej. this.router.navigate(['/sign-in']))
       // ni limpiar localStorage, ya que el AuthService (mediante el Hub) ya gestiona esto.
