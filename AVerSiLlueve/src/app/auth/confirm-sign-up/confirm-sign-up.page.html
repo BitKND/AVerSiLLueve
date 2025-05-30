@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true">
+  <div class="flex-center">
+    <ion-card color="light">
+      <div class="ion-text ion-padding">
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/sign-up"></ion-back-button>
+        </ion-buttons>
+      </div>
+      <div class="ion-text-center ion-padding">
+        <img src="../../../assets/icon/iconlogin.png" alt="Logo de la aplicación" width="50%">
+      </div>
+      <ion-card-content>
+        <ion-card-header>
+          <ion-card-title color="primary">Confirmar Registro</ion-card-title>
+        </ion-card-header>
+
+        <form [formGroup]="confirmForm" novalidate>
+          <ion-row>
+            <ion-col>
+              <ion-input formControlName="email" label="Email" labelPlacement="floating" placeholder="Ingrese mail" fill="outline" type="email"></ion-input>
+            </ion-col>
+          </ion-row>
+          <div *ngIf="errorControl['email'].touched && errorControl['email'].invalid">
+            <ion-text *ngIf="errorControl['email'].errors?.['required']" color="danger">
+              Email requerido.
+            </ion-text>
+            <ion-text *ngIf="errorControl['email'].errors?.['email']" color="danger">
+              El email debe ser válido.
+            </ion-text>
+          </div>
+
+          <ion-row>
+            <ion-col>
+              <ion-input formControlName="code" label="Código de Confirmación" labelPlacement="floating" placeholder="Ingrese el código de 6 dígitos" fill="outline" type="text" inputmode="numeric" maxlength="6"></ion-input>
+            </ion-col>
+          </ion-row>
+          <div *ngIf="errorControl['code'].touched && errorControl['code'].invalid">
+            <ion-text *ngIf="errorControl['code'].errors?.['required']" color="danger">
+              Código de confirmación requerido.
+            </ion-text>
+            <ion-text *ngIf="errorControl['code'].errors?.['minlength'] || errorControl['code'].errors?.['maxlength']" color="danger">
+              El código debe tener exactamente 6 dígitos.
+            </ion-text>
+          </div>
+
+          <ion-button (click)="confirmSignUp()" [disabled]="!confirmForm.valid" expand="block" color="primary">
+            Confirmar Cuenta
+          </ion-button>
+
+          <div class="ion-text-center">
+            <ion-button color="dark" (click)="resendCode()" fill="clear" expand="block">¿No recibiste el código? Reenviar</ion-button>
+            <ion-button color="dark" [routerLink]="['/sign-in']" fill="clear" expand="block">Volver al Login</ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+  

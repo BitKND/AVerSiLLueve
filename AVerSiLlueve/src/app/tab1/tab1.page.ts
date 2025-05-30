@@ -1,14 +1,15 @@
+// src/app/tab1/tab1.page.ts
 import { Component, OnInit } from '@angular/core';
 import { ProveedorClimaService } from '../services/proveedoresServices/proveedor-clima.service';
 import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, Platform } from '@ionic/angular'; // <-- ¡Importa Platform!
 import { Geolocation } from '@capacitor/geolocation';
 import { GeolocationService } from '../services/Geolocation/geolocation-service.service';
 
 
 interface ClimaData {
-  weather: { icon: string }[];  // Ajusta esto según la estructura de la API
+  weather: { icon: string }[];
 }
 
 @Component({
@@ -17,7 +18,7 @@ interface ClimaData {
   styleUrls: ['tab1.page.scss']
 })
 
-export class Tab1Page {
+export class Tab1Page implements OnInit { // <-- Implementa OnInit explícitamente
 
   proveedor:any;
   proveedor2:any;
@@ -27,11 +28,10 @@ export class Tab1Page {
   imageURL="";
   lat="";
   lon="";
-  isExpanded = false; // Para controlar si está expandido
+  isExpanded = false;
   isFavorite: boolean = false;
 
   weather: any = null;
-
 
 
   constructor(
@@ -39,25 +39,33 @@ export class Tab1Page {
     public proveedorClimaService: ProveedorClimaService,
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService,
-    private geolocationService: GeolocationService
-    
+    private geolocationService: GeolocationService,
+    private platform: Platform // <-- ¡Inyecta Platform!
   ) {}
 
   async ngOnInit(){
-    await this.geolocationService.getCurrentLocation();
-    const lat = this.geolocationService.lat;
-    const lon = this.geolocationService.lon;
+    // Solo intenta obtener la ubicación si estamos en un dispositivo nativo
+    // En la web, podríamos usar un servicio de IP a geolocalización o simplemente omitirlo por ahora
+    if (this.platform.is('capacitor')) { // <-- ¡Protege la llamada!
+      await this.geolocationService.getCurrentLocation();
+      const lat = this.geolocationService.lat;
+      const lon = this.geolocationService.lon;
 
-    if (lat && lon) {
-      this.proveedorClimaService.currentWeather(lat, lon).subscribe(
-        (data: any) => {
-          this.proveedor4 = data;
-        },
-        (error) => {
-          console.error('Error obteniendo datos del clima', error);
-        }
-      );}
-
+      if (lat && lon) {
+        this.proveedorClimaService.currentWeather(lat, lon).subscribe(
+          (data: any) => {
+            this.proveedor4 = data;
+          },
+          (error) => {
+            console.error('Error obteniendo datos del clima', error);
+          }
+        );
+      }
+    } else {
+      console.warn('Geolocation nativa no disponible en entorno web. No se obtendrá el clima por ubicación.');
+      // Aquí podrías añadir una lógica alternativa para web, como un valor por defecto
+      // o solicitar al usuario que ingrese una ciudad.
+    }
   }
 
   toggleFavorite() {
@@ -73,40 +81,40 @@ export class Tab1Page {
   }
 
 
-
-
-  async getCurrentLocation(){
-    try {
-      const permissionStatus = await Geolocation.checkPermissions();
-      console.log('Permission status: ', permissionStatus.location);
-      if(permissionStatus.location != 'granted') {
-        const requestStatus = await Geolocation.requestPermissions();
-        if(requestStatus.location != 'granted'){
-          return null;
-        }
-      }
-      let options: PositionOptions = {
-        maximumAge: 3000,
-        timeout: 10000,
-        enableHighAccuracy: true
-      };
-      return await Geolocation.getCurrentPosition(options);
-      
-
-    } catch (e) {
-      console.log(e);
-      throw(e);      
-    }
-  }
+  // Mueve este método 'getCurrentLocation' a tu 'GeolocationService'
+  // y protégelo allí también. Si está aquí, no se está usando, pero es la fuente del error.
+  // Si lo usas directamente en algún sitio, también protégelo.
+  // async getCurrentLocation(){
+  //   try {
+  //     // Esta es la línea que causa el error en la web
+  //     const permissionStatus = await Geolocation.checkPermissions();
+  //     console.log('Permission status: ', permissionStatus.location);
+  //     if(permissionStatus.location != 'granted') {
+  //       const requestStatus = await Geolocation.requestPermissions();
+  //       if(requestStatus.location != 'granted'){
+  //         return null;
+  //       }
+  //     }
+  //     let options: PositionOptions = {
+  //       maximumAge: 3000,
+  //       timeout: 10000,
+  //       enableHighAccuracy: true
+  //     };
+  //     return await Geolocation.getCurrentPosition(options);
+  //   } catch (e) {
+  //     console.log(e);
+  //     throw(e);       
+  //   }
+  // }
   
   // -------------- Obtener clima por ciudad ------------
   ObtenerClima() {
     this.proveedorClimaService.ObtenerClima(this.city)
     .subscribe((data: any)=>{
       this.proveedor = data;
-      this.imageURL = data.weather[0].icon;  // Ajustado para acceder al array de weather
-      this.lat = data.coord.lat; // Guardar latitud
-      this.lon = data.coord.lon; // Guardar longitud
+      this.imageURL = data.weather[0].icon;
+      this.lat = data.coord.lat;
+      this.lon = data.coord.lon;
       console.log(data);
     });
   }
@@ -158,9 +166,6 @@ export class Tab1Page {
       buttons: ['Entendido'],
 
     });
-     alert.present();
+      alert.present();
   }
-
-
-
 }

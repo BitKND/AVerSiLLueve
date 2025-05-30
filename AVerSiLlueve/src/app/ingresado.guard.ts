@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-//La clase retorna true siempre y cuando el "flag" 'ingresado' sea true, de lo contrario nos redirige a sign in
+//La clase retorna true siempre y cuando el "flag" 'ingresado' sea true, de lo contrario noS redirige a sign in
 export class IngresadoGuard implements CanActivate {
 
   constructor(public navCtrl: NavController){}
