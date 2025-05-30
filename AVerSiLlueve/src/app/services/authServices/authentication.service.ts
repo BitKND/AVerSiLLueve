@@ -4,7 +4,7 @@ import { Auth, GoogleAuthProvider, signInWithPopup} from '@angular/fire/auth';
 
 import {AngularFireAuth} from '@angular/fire/compat/auth'; 
 import { Amplify } from "aws-amplify";
-import  config from 'config.json';
+
 
 import { signIn } from '@aws-amplify/auth';
 
@@ -18,14 +18,7 @@ export class AuthenticationService {
 
 
     constructor() { 
-    Amplify.configure({
-      Auth: {
-        Cognito: {
-          userPoolId: config.amplify.userPooolId,
-          userPoolClientId: config.amplify.userPoolClientId
-        }
-      }
-    });
+
   }
 
    async logIn(userName: string, password: string){
