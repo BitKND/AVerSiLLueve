@@ -17,9 +17,25 @@ export class GeolocationService {
   lat: number | null = null;
   lon: number | null = null;
 
-  constructor(private platform: Platform) {} 
+  constructor(private platform: Platform
+  ) {} 
 
-  async getCurrentLocation() {
+    async getCurrentLocation() {
+      
+      let options: PositionOptions = {
+          maximumAge: 3000,
+          timeout: 10000,
+          enableHighAccuracy: true
+        };
+
+        const coordinates = await Geolocation.getCurrentPosition(options);
+        this.lat = coordinates.coords.latitude;
+        this.lon = coordinates.coords.longitude;
+        console.log('Ubicación obtenida:', this.lat, this.lon); // Para depuración
+
+  }
+
+/*   async getCurrentLocation() {
     // Solo intenta usar los plugins de Capacitor si estamos en un dispositivo nativo.
     if (this.platform.is('capacitor') || this.platform.is('cordova')) {
       try {
@@ -59,7 +75,7 @@ export class GeolocationService {
       // Aquí podrías, por ejemplo, intentar obtener la IP pública y usar un servicio
       // de geolocalización de IP, o mostrar un modal para que el usuario ingrese la ciudad.
     }
-  }
+  } */
 
   async openSettings(app = false) {
     // Solo intenta abrir las configuraciones nativas si estamos en un dispositivo nativo.

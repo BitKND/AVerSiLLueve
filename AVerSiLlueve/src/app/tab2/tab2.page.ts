@@ -32,8 +32,17 @@ export class Tab2Page {
   }
 
   removeFavorite(city: string) {
+
     this.proveedorService.borrarFavorito(city);
     this.loadFavorites();
+
+ 
+/*     if(this.favoriteCities){
+      this.proveedorService.borrarFavorito(city);
+      this.loadFavorites();
+  } else {
+    console.log ('No se pudo eliminar');
+  } */
   }
 
 }

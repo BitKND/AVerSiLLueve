@@ -33,9 +33,11 @@
     "@capacitor/keyboard": "6.0.2",
     "@capacitor/status-bar": "6.0.1",
     "@ionic/angular": "^8.0.0",
+    "@ionic/storage-angular": "^4.0.0",
     "aws-amplify": "^6.14.4",
     "capacitor-native-settings": "^6.0.1",
     "ionicons": "^7.0.0",
+    "localforage-cordovasqlitedriver": "^1.8.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

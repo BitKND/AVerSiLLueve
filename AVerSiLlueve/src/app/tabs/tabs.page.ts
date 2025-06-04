@@ -30,24 +30,24 @@ export class TabsPage {
   }
   ngOnInit(): void {
 
-    this.authService.getProfile().then(user => {
+/*     this.authService.getProfile().then(user => {
       this.email = user?.email;
       console.log(user?.email);
     }).catch(error => {
       console.error('Error getting user profile:', error);
-    });
+    }); */
     
   }
 
 //Hacemos uso del servicio de authservice establecido, y le agregamos que elimine el flag 'ingresado', para respetar el criterio de los guards establecidos.
-  async logout(){
+/*   async logout(){
     this.authService.signOut().then(()=>{
       localStorage.removeItem('ingresado');
       this.route.navigate(['/sign-in']);
     }).catch((error)=>{
       console.log(error);
     })
-  }
+  } */
 
 
 

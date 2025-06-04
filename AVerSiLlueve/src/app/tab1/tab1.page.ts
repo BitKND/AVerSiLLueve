@@ -4,7 +4,7 @@ import { ProveedorClimaService } from '../services/proveedoresServices/proveedor
 import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
 import { AlertController, Platform } from '@ionic/angular'; // <-- ¡Importa Platform!
-import { Geolocation } from '@capacitor/geolocation';
+
 import { GeolocationService } from '../services/Geolocation/geolocation-service.service';
 
 
@@ -40,13 +40,28 @@ export class Tab1Page implements OnInit { // <-- Implementa OnInit explícitamen
     public proveedor2ClimaService: Proveedor2ClimaService,
     public proveedor3ClimaService: Proveedor3ClimaService,
     private geolocationService: GeolocationService,
-    private platform: Platform // <-- ¡Inyecta Platform!
+    private platform: Platform 
   ) {}
 
   async ngOnInit(){
+
+    await this.geolocationService.getCurrentLocation();
+      const lat = this.geolocationService.lat;
+      const lon = this.geolocationService.lon;
+
+      if (lat && lon) {
+        this.proveedorClimaService.currentWeather(lat, lon).subscribe(
+          (data: any) => {
+            this.proveedor4 = data;
+          },
+          (error) => {
+            console.error('Error obteniendo datos del clima', error);
+          }
+        );
+      }
     // Solo intenta obtener la ubicación si estamos en un dispositivo nativo
     // En la web, podríamos usar un servicio de IP a geolocalización o simplemente omitirlo por ahora
-    if (this.platform.is('capacitor')) { // <-- ¡Protege la llamada!
+   /*  if (this.platform.is('capacitor')) { // <-- ¡Protege la llamada!
       await this.geolocationService.getCurrentLocation();
       const lat = this.geolocationService.lat;
       const lon = this.geolocationService.lon;
@@ -65,9 +80,18 @@ export class Tab1Page implements OnInit { // <-- Implementa OnInit explícitamen
       console.warn('Geolocation nativa no disponible en entorno web. No se obtendrá el clima por ubicación.');
       // Aquí podrías añadir una lógica alternativa para web, como un valor por defecto
       // o solicitar al usuario que ingrese una ciudad.
+    } */
+  }
+
+  AgregarFavorito(){
+    if (this.esFavorito()){
+      this.presentAlert();
+    } else {
+      this.proveedorClimaService.agregarFavorito(this.city);
     }
   }
 
+  
   toggleFavorite() {
     if (this.esFavorito()) {
       this.proveedorClimaService.borrarFavorito(this.city);
@@ -162,7 +186,7 @@ export class Tab1Page implements OnInit { // <-- Implementa OnInit explícitamen
   async presentAlert(){
     const alert =  await this.alert.create({
       header: '',
-      message: '',
+      message: 'Ya posees guardada esta ciudad',
       buttons: ['Entendido'],
 
     });
