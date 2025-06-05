@@ -17,7 +17,7 @@ export class ProveedorClimaService {
   apiKey = 'c760af7a74a4ec3543b1ddd7f09e9636'; //ES CONSTANTE, POR ESO LA DECLARO ACA
   URI: string = '';
 
-  private favoritos: any[] = [];
+  private favoritos: any [] = [];
 
   constructor(
     public http: HttpClient
@@ -25,7 +25,7 @@ export class ProveedorClimaService {
     console.log('Hola Proveedor 1');
     const storedFavorites = localStorage.getItem('favoritos');
 
-    this.favoritos = storedFavorites ? JSON.parse(storedFavorites) : [];
+    this.favoritos = storedFavorites ? JSON.parse(storedFavorites) : console.log('No hay elementos guardados');
 
   }
 
@@ -43,32 +43,32 @@ export class ProveedorClimaService {
   }
 
 
-
-
-
   agregarFavorito(city: string) {
-    if (!this.esFavorito(city)) {
+
+    if (this.favoritos) {
       this.favoritos.push(city);
       this.actualizarStorage();
+      console.log(this.favoritos)
     } else {
-      console.log('No fue posible agregar a favoritos')
+      console.log('No fue posible agregar a favoritos');
+      console.log(this.favoritos)
     }
   }
 
   borrarFavorito(city: string) {
-
     
-
     let index = this.favoritos.indexOf(city);
-   
-    if (index>=0){
-      this.favoritos.splice(index, 1);
-      this.actualizarStorage();
-    }  
+
+    console.log(index);
+
+    this.favoritos.splice(index, 1);
+
+    this.actualizarStorage();
+
+/*     this.favoritos = this.favoritos.filter(fav => fav !== city);
+    this.actualizarStorage(); */
+
     console.log(this.favoritos);
-
-
-
   }
 
   esFavorito(city: string): boolean {
@@ -80,7 +80,8 @@ export class ProveedorClimaService {
   }
 
   private actualizarStorage() {
-    localStorage.setItem('favorites', JSON.stringify(this.favoritos));
+    
+    localStorage.setItem('favoritos', JSON.stringify(this.favoritos));
   }
 }
 

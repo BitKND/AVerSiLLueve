@@ -84,25 +84,21 @@ export class Tab1Page implements OnInit { // <-- Implementa OnInit explícitamen
   }
 
   AgregarFavorito(){
-    if (this.esFavorito()){
-      this.presentAlert();
-    } else {
-      this.proveedorClimaService.agregarFavorito(this.city);
-    }
+    
+    this.proveedorClimaService.agregarFavorito(this.city);
+    
   }
 
   
-  toggleFavorite() {
+/*   toggleFavorite() {
     if (this.esFavorito()) {
       this.proveedorClimaService.borrarFavorito(this.city);
     } else {
       this.proveedorClimaService.agregarFavorito(this.city);
     }
-  }
+  } */
 
-  esFavorito(): boolean {
-    return this.proveedorClimaService.esFavorito(this.city);
-  }
+
 
 
   // Mueve este método 'getCurrentLocation' a tu 'GeolocationService'
