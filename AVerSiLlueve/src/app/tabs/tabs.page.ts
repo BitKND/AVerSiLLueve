@@ -30,12 +30,12 @@ export class TabsPage {
   }
   ngOnInit(): void {
 
-    this.authService.getProfile().then(user => {
+/*     this.authService.getProfile().then(user => {
       this.email = user?.email;
       console.log(user?.email);
     }).catch(error => {
       console.error('Error getting user profile:', error);
-    });
+    }); */
     
   }
 

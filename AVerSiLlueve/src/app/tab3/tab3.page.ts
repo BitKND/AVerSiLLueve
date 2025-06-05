@@ -19,7 +19,7 @@ export class Tab3Page {
     public proveedor3ClimaService: Proveedor3ClimaService */
 
   ) {
-    this.user = authService.getProfile();
+    //this.user = authService.getProfile();
   }
 
   async logout(){
