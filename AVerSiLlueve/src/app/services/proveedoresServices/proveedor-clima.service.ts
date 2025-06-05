@@ -3,11 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { findIndex } from 'rxjs';
 
 
-export interface FavoriteItem {
-  id: string; // ID único del elemento
-  name: string; // Nombre del elemento (para mostrar)
 
-}
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +21,7 @@ export class ProveedorClimaService {
     console.log('Hola Proveedor 1');
     const storedFavorites = localStorage.getItem('favoritos');
 
-    this.favoritos = storedFavorites ? JSON.parse(storedFavorites) : console.log('No hay elementos guardados');
+    this.favoritos = storedFavorites ? JSON.parse(storedFavorites) : [];
 
   }
 
@@ -45,14 +41,17 @@ export class ProveedorClimaService {
 
   agregarFavorito(city: string) {
 
-    if (this.favoritos) {
+    try {
       this.favoritos.push(city);
       this.actualizarStorage();
       console.log(this.favoritos)
-    } else {
+    } catch (error) {
+      
       console.log('No fue posible agregar a favoritos');
       console.log(this.favoritos)
     }
+      
+        
   }
 
   borrarFavorito(city: string) {

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { initializeApp } from '@angular/fire/app';
-import { Auth, GoogleAuthProvider, signInWithPopup} from '@angular/fire/auth';
+import { Auth, GoogleAuthProvider, signInWithPopup, signInWithRedirect} from '@angular/fire/auth';
 
 import {AngularFireAuth} from '@angular/fire/compat/auth'; 
 import { Amplify } from "aws-amplify";
@@ -17,7 +17,7 @@ import { signIn } from '@aws-amplify/auth';
 export class AuthenticationService {
 
 
-    constructor() { 
+/*     constructor() { 
 
   }
 
@@ -27,19 +27,19 @@ export class AuthenticationService {
       password: password
     })
     return signInResult;
-  }
+  } */
 
 
 
  
   //Declaramos variable auth para usarse posteriormente en el login de google.
- // private _auth = inject(Auth);
+ private _auth = inject(Auth);
 
   //Declaramos la clase ngFireAuth que utilizara el modulo AngularFireAuth
-  
+  constructor(public ngFireAuth:AngularFireAuth){
 
+  }
 
-  //constructor(public ngFireAuth:AngularFireAuth){}
 
 /*   //Funcion que toma mail y contraseña para el registro
   async registerUser(email: string, password: string){
@@ -61,13 +61,13 @@ export class AuthenticationService {
   //Funcion para obtener datos del perfil que inicio sesion
   async getProfile(){
     return await this.ngFireAuth['currentUser'];
-  }
+  }*/
   //Funcion para ingresar con google
   signInWithGoogle() {
     const provider = new GoogleAuthProvider();
 
     // provider.setCustomParameters({ prompt: 'select_account' });
 
-    return signInWithPopup(this._auth, provider);
-  } */
+    return signInWithRedirect(this._auth, provider);
+  } 
 }
