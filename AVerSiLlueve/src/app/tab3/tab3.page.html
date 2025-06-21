@@ -1,27 +1,86 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true">
-  <ion-card-header>
-    <ion-title size="large">Configuración</ion-title>
-  </ion-card-header>
+  <div class="profile-container ion-padding">
 
-  <ion-list lines="full">
-    <ion-item>
-      <ion-label>
-        <h2>Cuenta</h2>
-        <p>Gestiona tu información de cuenta y seguridad.</p>
-      </ion-label>
-    </ion-item>
+    <div class="profile-header ion-text-center ion-margin-bottom">
+      <ion-avatar class="profile-picture">
+        <img src="assets/default-profile.png" alt="Foto de Perfil">
+      </ion-avatar>
+      <ion-text>
+        <h2>{{ newDisplayName || 'Cargando nombre...' }}</h2>
+      </ion-text>
+    </div>
 
-    <ion-item>
-      <ion-label>
-        <h2>Nombre de usuario</h2>
-        <p>Tu nombre de usuario actual.</p>
-      </ion-label>
+    <ion-list lines="none" class="ion-no-padding">
+
+      <ion-item class="profile-item">
+        <ion-icon name="mail-outline" slot="start" color="medium"></ion-icon>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input [value]="userEmail || ''" readonly></ion-input>
       </ion-item>
-  </ion-list>
 
-  <div class="spacer"></div>
+      <ion-item class="profile-item">
+        <ion-icon name="person-circle-outline" slot="start" color="medium"></ion-icon>
+        <ion-label position="floating">Nombre de Usuario</ion-label>
+        <ion-input [(ngModel)]="newDisplayName" placeholder="Ej: MiApodo"></ion-input>
+      </ion-item>
 
-  <div class="button-container">
-    <ion-button expand="block" color="danger" (click)="logout()">Cerrar sesión</ion-button>
+      <ion-item class="profile-item">
+        <ion-icon name="person-outline" slot="start" color="medium"></ion-icon>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="newFirstName" placeholder="Ej: Juan"></ion-input>
+      </ion-item>
+
+      <ion-item class="profile-item">
+        <ion-icon name="person-outline" slot="start" color="medium"></ion-icon>
+        <ion-label position="floating">Apellido</ion-label>
+        <ion-input [(ngModel)]="newLastName" placeholder="Ej: Pérez"></ion-input>
+      </ion-item>
+
+      <ion-item class="profile-item">
+        <ion-icon name="call-outline" slot="start" color="medium"></ion-icon>
+        <ion-label position="floating">Teléfono</ion-label>
+        <ion-input [(ngModel)]="newPhoneNumber" placeholder="Ej: +5491123456789" type="tel"></ion-input>
+      </ion-item>
+
+      <ion-item class="profile-item ion-margin-top" detail button (click)="toggleFavoriteCitiesList()">
+        <ion-icon name="heart-outline" slot="start" color="medium"></ion-icon>
+        <ion-label>Ciudades Favoritas</ion-label>
+        <ion-text slot="end" color="medium">({{ currentProfile?.favoriteCities?.length || 0 }})</ion-text>
+      </ion-item>
+
+      <div *ngIf="isFavoriteCitiesListExpanded && currentProfile?.favoriteCities?.length">
+        <ion-item *ngFor="let city of currentProfile.favoriteCities" lines="none" class="favorite-city-item">
+          <ion-icon name="pin-outline" slot="start" color="tertiary"></ion-icon>
+          <ion-label>{{ city }}</ion-label>
+        </ion-item>
+        <ion-item *ngIf="!currentProfile.favoriteCities.length" lines="none" class="no-favorites-message">
+          <ion-label class="ion-text-center ion-padding">No tienes ciudades favoritas añadidas.</ion-label>
+        </ion-item>
+      </div>
+    </ion-list>
+
+    <div class="ion-margin-top">
+      <ion-button expand="block" (click)="saveProfile()">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        Guardar Cambios
+      </ion-button>
+
+      <ion-button expand="block" fill="solid" color="secondary" class="ion-margin-top">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        Enviar Email de Alerta (Demo)
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" color="danger" (click)="logout()" class="ion-margin-top">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar Sesión
+      </ion-button>
+    </div>
+
   </div>
 </ion-content>

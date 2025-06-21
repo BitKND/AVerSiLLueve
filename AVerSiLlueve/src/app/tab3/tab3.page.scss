@@ -1,39 +1,145 @@
+/* src/app/tab3/tab3.page.scss */
+
 ion-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  // Mantuvimos el flexbox si lo deseas para el layout general del content
+  // Pero el profile-container ya maneja su propio centrado y espaciado.
+  // Si no necesitas el flexbox global, podrías eliminar estas 3 líneas.
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  --background: var(--ion-color-light); // Fondo más claro para la página
+}
+
+.profile-container {
+  background: var(--ion-color-step-50, #f8f8f8); // Fondo suave para el contenedor principal
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); // Sombra sutil para un efecto de "tarjeta"
+  padding: 20px;
+  margin: 20px auto; // Centrar el contenedor horizontalmente con margen superior/inferior
+  max-width: 500px; // Limitar el ancho para que se vea bien en pantallas grandes
+  flex-grow: 1; // Permite que crezca para ocupar espacio disponible si display: flex está en ion-content
+}
+
+.profile-header {
+  margin-top: 10px;
+  margin-bottom: 25px;
+  text-align: center; // Centrar el contenido de la cabecera
+
+  ion-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px auto; // Centrar la imagen y darle margen inferior
+    border: 3px solid var(--ion-color-primary); // Borde alrededor de la imagen
+    padding: 2px; // Pequeño padding para el borde
   }
 
-ion-item {
-    --background: #f5f5f5;
-    border-radius: 8px;
-    margin: 10px;
-  }
-  
-  ion-button {
-  // Reinicia propiedades clave que podrían causar problemas
-  all: unset !important; // Esto intenta resetear la mayoría de los estilos
-  display: block !important; // Asegura que ocupe espacio
-  width: 150px !important; // Dale un tamaño fijo
-  height: 50px !important; // Dale un tamaño fijo
-  background-color: red !important; // Hazlo muy visible
-  color: white !important; // Texto contrastante
-  border: 2px solid black !important; // Borde claro
-  cursor: pointer !important; // Para indicar que es clickeable
-  z-index: 9999 !important; // Asegura que esté por encima de todo
-  pointer-events: auto !important; // ¡Crucial para que reciba clics!
-  }
-  
-  ion-list {
-    margin-bottom: 20px;
+  h2 {
+    font-weight: 600;
+    font-size: 1.8em;
+    color: var(--ion-color-dark);
+    margin-bottom: 5px;
   }
 
-  .spacer {
-    flex-grow: 1;
+  p {
+    color: var(--ion-color-medium);
+    font-size: 0.95em;
+    margin-top: 0;
   }
+}
 
-  .button-container {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+ion-list {
+  background: transparent; // Que la lista no tenga su propio fondo
+  margin-bottom: 20px;
+  padding: 0; // Asegurarse de que no haya padding interno en la lista
+
+  ion-item {
+    --background: var(--ion-color-white); // Fondo blanco para cada item del formulario
+    --border-radius: 8px;
+    border: 1px solid var(--ion-color-light);
+    margin-bottom: 10px; // Espacio entre items
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); // Sombra ligera para los items
+    padding-left: 0; // Quitar padding por defecto para que el icono quede a la izquierda
+    --padding-start: 10px; // Alinear el contenido del item correctamente
+    --padding-start: 15px; // Aumentar un poco el padding izquierdo
+    --inner-padding-end: 15px; // Asegurar padding al final
+    min-height: 48px; // Un alto mínimo para el ítem entero
+    position: relative; // Para que z-index funcione si es necesario
+    z-index: 5; 
+
+    ion-icon {
+      font-size: 1.5em;
+      margin-right: 10px; // Espacio entre icono y label/input
+    }
+
+    ion-label {
+      color: var(--ion-color-medium);
+      font-size: 0.9em;
+    }
+
+    ion-input {
+      --padding-start: 0; // Alinear el texto de entrada
+      color: var(--ion-color-dark);
+      font-size: 1em;
+    }
   }
+}
+
+ion-button {
+  --border-radius: 8px;
+  font-weight: 600;
+  // Aumentar la altura mínima para facilitar el clic
+  height: 48px; 
+  min-height: 48px; /* Asegura un alto mínimo */
+  padding: var(--ion-padding-md, 16px) var(--ion-padding-xl, 32px); /* Añade padding horizontal y vertical */
+  // Asegurarse de que esté por encima de otros elementos si hay superposición
+  position: relative; // Necesario para que z-index funcione
+  z-index: 10; // Un valor alto para asegurar que esté en frente
+}
+
+// Estilos específicos para la sección de los botones (opcional, si los agrupas en un div)
+.button-group {
+    margin-top: 20px;
+}
+
+// Si tenías estilos para ion-card-content h2 y no lo estás usando en este tab, puedes eliminarlo.
+// Si lo usas en otros tabs, lo mantendrías en un archivo SCSS global o específico de ese tab.
+/*
+ion-card-content {
+    h2 {
+        font-weight: bold;
+        color: var(--ion-color-primary, #3880ff);
+        font-size: 1.8em;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+}
+*/
+
+.favorite-city-item {
+  --background: var(--ion-color-light); // Un fondo ligeramente diferente
+  --border-radius: 4px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 20px; // Añadir un poco de sangría para diferenciarlos
+  box-shadow: none; // No necesitan sombra si están anidados
+  border: none; // Sin borde
+  ion-label {
+    font-weight: 500;
+    color: var(--ion-color-dark-shade);
+  }
+}
+
+.no-favorites-message {
+  --background: transparent;
+  --border-radius: 0;
+  border: none;
+  box-shadow: none;
+  padding: 10px 0;
+  ion-label {
+    color: var(--ion-color-medium);
+    font-style: italic;
+  }
+}

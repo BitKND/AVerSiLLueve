@@ -1,171 +1,209 @@
 // src/app/tab1/tab1.page.ts
-import { Component, OnInit } from '@angular/core';
-import { ProveedorClimaService } from '../services/proveedoresServices/proveedor-clima.service';
-import { Proveedor2ClimaService } from '../services/proveedoresServices/proveedor2-clima.service';
-import { Proveedor3ClimaService } from '../services/proveedoresServices/proveedor3-clima.service';
-import { AlertController, Platform } from '@ionic/angular'; // <-- ¡Importa Platform!
-import { Geolocation } from '@capacitor/geolocation';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+// Importa el nuevo servicio unificado y GeolocationService, AlertController, Platform, ToastController, UserService
+import { OpenWeatherApiService } from '../services/proveedoresServices/open-weather-api.service'; 
 import { GeolocationService } from '../services/Geolocation/geolocation-service.service';
-
-
-interface ClimaData {
-  weather: { icon: string }[];
-}
+import { AlertController, Platform, ToastController } from '@ionic/angular';
+import { UserService, UserProfile } from '../services/userServices/user.services';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-
-export class Tab1Page implements OnInit { // <-- Implementa OnInit explícitamente
-
-  proveedor:any;
-  proveedor2:any;
-  proveedor3:any;
-  proveedor4:number | null = null;
-  city="";
-  imageURL="";
-  lat="";
-  lon="";
-  isExpanded = false;
-  isFavorite: boolean = false;
-
-  weather: any = null;
-
+export class Tab1Page implements OnInit, OnDestroy {
+  proveedor: any = null; // Clima actual de la ciudad buscada
+  proveedor2: any = null; // Puedes considerar eliminar si no lo usas en el HTML para geocoding
+  proveedor3: any = null; // Para el forecast
+  proveedor4: any = null; // Clima actual por geolocalización
+  city: string = "";
+  imageURL: string = "";
+  lat: string = ""; 
+  lon: string = ""; 
+  isExpanded: boolean = false; 
+  
+  userProfile: UserProfile | null = null;
+  private userProfileSubscription: Subscription | undefined;
+  private weatherSubscription: Subscription | undefined;
+  private forecastSubscription: Subscription | undefined;
 
   constructor(
-    public alert:AlertController,
-    public proveedorClimaService: ProveedorClimaService,
-    public proveedor2ClimaService: Proveedor2ClimaService,
-    public proveedor3ClimaService: Proveedor3ClimaService,
+    public alert: AlertController,
     private geolocationService: GeolocationService,
-    private platform: Platform // <-- ¡Inyecta Platform!
+    private platform: Platform,
+    private userService: UserService,
+    private toastController: ToastController,
+    // ¡Aquí solo inyectamos el nuevo servicio unificado!
+    private openWeatherApiService: OpenWeatherApiService // <-- Único servicio de clima
+    // **NO** inyectes ProveedorClimaService, Proveedor2ClimaService, Proveedor3ClimaService aquí.
   ) {}
 
-  async ngOnInit(){
-    // Solo intenta obtener la ubicación si estamos en un dispositivo nativo
-    // En la web, podríamos usar un servicio de IP a geolocalización o simplemente omitirlo por ahora
-    if (this.platform.is('capacitor')) { // <-- ¡Protege la llamada!
+  async ngOnInit() {
+    this.userProfileSubscription = this.userService.userProfile$.subscribe(profile => {
+      this.userProfile = profile;
+    });
+
+    this.userService.loadUserProfile().subscribe({
+      next: (profile) => console.log('Perfil de usuario cargado en Tab1 OnInit'),
+      error: (error) => console.error('Error al cargar el perfil en Tab1 OnInit:', error)
+    });
+
+    if (this.platform.is('capacitor')) {
       await this.geolocationService.getCurrentLocation();
       const lat = this.geolocationService.lat;
       const lon = this.geolocationService.lon;
 
       if (lat && lon) {
-        this.proveedorClimaService.currentWeather(lat, lon).subscribe(
+        // Usa el nuevo servicio unificado para el clima por coordenadas de geolocalización
+        this.weatherSubscription = this.openWeatherApiService.getCurrentWeatherByCoords(lat, lon).subscribe(
           (data: any) => {
             this.proveedor4 = data;
           },
           (error) => {
-            console.error('Error obteniendo datos del clima', error);
+            console.error('Error obteniendo datos del clima por ubicación', error);
           }
         );
       }
     } else {
       console.warn('Geolocation nativa no disponible en entorno web. No se obtendrá el clima por ubicación.');
-      // Aquí podrías añadir una lógica alternativa para web, como un valor por defecto
-      // o solicitar al usuario que ingrese una ciudad.
     }
   }
 
-  toggleFavorite() {
-    if (this.esFavorito()) {
-      this.proveedorClimaService.borrarFavorito(this.city);
+  ngOnDestroy() {
+    this.userProfileSubscription?.unsubscribe();
+    this.weatherSubscription?.unsubscribe();
+    this.forecastSubscription?.unsubscribe();
+  }
+
+  async toggleFavorite() {
+    if (!this.proveedor || !this.proveedor.name) {
+      await this.presentToast('Por favor, busca una ciudad primero para marcarla como favorita.', 'warning');
+      return;
+    }
+    if (!this.userProfile || this.userProfile.userId === 'guest') {
+      await this.presentToast('Debes iniciar sesión para añadir favoritos.', 'danger');
+      // Si el usuario es invitado y ha hecho clic, la UI puede haber cambiado.
+      // La vinculación [checked] en el HTML debería reestablecerlo si la llamada
+      // al servicio no se produce o falla.
+      return;
+    }
+
+    const cityToToggle = this.proveedor.name;
+    let currentFavorites = this.userProfile.favoriteCities || [];
+    let updatedFavorites: string[];
+    let message: string;
+    let color: string;
+
+    // Determinar la acción basándose en el estado *actual* de `isFavoriteCity`
+    if (this.isFavoriteCity(cityToToggle)) {
+      updatedFavorites = currentFavorites.filter(favCity => favCity.toLowerCase() !== cityToToggle.toLowerCase());
+      message = `"${cityToToggle}" eliminado de favoritos.`;
+      color = 'warning';
     } else {
-      this.proveedorClimaService.agregarFavorito(this.city);
+      // Solo añadir si no está ya en la lista (comparación sin distinguir mayúsculas/minúsculas)
+      if (!currentFavorites.some(favCity => favCity.toLowerCase() === cityToToggle.toLowerCase())) {
+        updatedFavorites = [...currentFavorites, cityToToggle];
+        message = `"${cityToToggle}" añadido a favoritos.`;
+        color = 'success';
+      } else {
+        // Este caso idealmente no debería ocurrir si [checked] está configurado correctamente,
+        // pero es una buena salvaguarda.
+        await this.presentToast('Esta ciudad ya está en tus favoritos.', 'warning');
+        // Como mostramos un toast pero no actualizamos, podríamos necesitar recargar el perfil
+        // para forzar la actualización de la UI del botón.
+        this.userService.loadUserProfile().subscribe(); // Forzar recarga para refrescar la UI
+        return;
+      }
     }
-  }
 
-  esFavorito(): boolean {
-    return this.proveedorClimaService.esFavorito(this.city);
-  }
-
-
-  // Mueve este método 'getCurrentLocation' a tu 'GeolocationService'
-  // y protégelo allí también. Si está aquí, no se está usando, pero es la fuente del error.
-  // Si lo usas directamente en algún sitio, también protégelo.
-  // async getCurrentLocation(){
-  //   try {
-  //     // Esta es la línea que causa el error en la web
-  //     const permissionStatus = await Geolocation.checkPermissions();
-  //     console.log('Permission status: ', permissionStatus.location);
-  //     if(permissionStatus.location != 'granted') {
-  //       const requestStatus = await Geolocation.requestPermissions();
-  //       if(requestStatus.location != 'granted'){
-  //         return null;
-  //       }
-  //     }
-  //     let options: PositionOptions = {
-  //       maximumAge: 3000,
-  //       timeout: 10000,
-  //       enableHighAccuracy: true
-  //     };
-  //     return await Geolocation.getCurrentPosition(options);
-  //   } catch (e) {
-  //     console.log(e);
-  //     throw(e);       
-  //   }
-  // }
-  
-  // -------------- Obtener clima por ciudad ------------
-  ObtenerClima() {
-    this.proveedorClimaService.ObtenerClima(this.city)
-    .subscribe((data: any)=>{
-      this.proveedor = data;
-      this.imageURL = data.weather[0].icon;
-      this.lat = data.coord.lat;
-      this.lon = data.coord.lon;
-      console.log(data);
+    this.userService.updateFavoriteCities(updatedFavorites).subscribe({
+      next: (profile) => {
+        // La suscripción a userProfile$ en ngOnInit actualizará `this.userProfile`
+        // y reevaluará `isFavoriteCity()`, lo que a su vez actualiza el toggle a través de [checked].
+        this.presentToast(message, color);
+      },
+      error: async (error) => {
+        console.error('Error al actualizar favoritos:', error);
+        await this.presentToast('Error al actualizar favoritos. Intenta de nuevo.', 'danger');
+        // En caso de error, forzar una recarga para revertir el estado del toggle si cambió de forma optimista.
+        this.userService.loadUserProfile().subscribe();
+      }
     });
   }
 
-
-  // ------------------------------ proveedor 2 (temperatura actual segun cityName, stateCode, countryCode) ------------------------------
-  //METODO Geocoding API
-  geocoding(cityName: string, stateCode: string, countryCode: string) {
-    this.proveedor2ClimaService.Geocoding(cityName, stateCode, countryCode)
-    .subscribe((data:any) =>{
-        console.log(data);
-        this.proveedor2 = data
-      },
-      err => console.log(err)
-    )
+  isFavoriteCity(cityToCheck: string): boolean {
+    return this.userProfile?.favoriteCities?.some(favCity => favCity.toLowerCase() === cityToCheck.toLowerCase()) || false;
   }
 
-  
-
-  // ------------------------------ proveedor 3 (temperatura futuro segun lat y lon) ------------------------------
-
-  //METODO 3 para obtener forecast
-  foreCast() {
-    this.proveedor3ClimaService.foreCast(this.lat, this.lon)
-    .subscribe((data:any) => {
-        console.log(data);
-        this.proveedor3 = {
-          ...data, // Copiamos el resto de las propiedades del objeto original
-          list: data.list.slice(0, 8) // Tomar solo los primeros 8 intervalos (24 horas)
-        };
+  ObtenerClima() {
+    if (!this.city) {
+      this.presentToast('Por favor, ingresa un nombre de ciudad.', 'warning');
+      return;
+    }
+    // Usa el nuevo servicio unificado para el clima actual por ciudad
+    this.openWeatherApiService.getCurrentWeatherByCity(this.city).subscribe({
+      next: (data: any) => {
+        this.proveedor = data;
+        this.imageURL = data.weather[0].icon;
+        this.lat = data.coord.lat; 
+        this.lon = data.coord.lon;
+        console.log("Datos del clima actual:", data);
+        
+        this.proveedor3 = null; 
+        this.isExpanded = false; 
       },
-      err => console.log(err)
-    )
+      error: (error) => {
+        console.error('Error al obtener el clima por ciudad:', error);
+        this.presentToast('No se pudo encontrar la ciudad. Intenta con otro nombre.', 'danger');
+        this.proveedor = null;
+        this.proveedor3 = null;
+        this.isExpanded = false;
+      }
+    });
+  }
+
+  ObtenerPronostico() {
+    if (!this.city) {
+      this.presentToast('No hay ciudad para obtener el pronóstico. Busca una ciudad primero.', 'warning');
+      return;
+    }
+    this.forecastSubscription?.unsubscribe(); 
+    
+    // Usa el nuevo servicio unificado para el pronóstico por nombre de ciudad
+    this.forecastSubscription = this.openWeatherApiService.getForecastByCity(this.city).subscribe({
+      next: (data: any) => {
+        this.proveedor3 = {
+          ...data,
+          list: data.list.slice(0, 8) 
+        };
+        console.log("Datos del pronóstico (proveedor3):", this.proveedor3);
+      },
+      error: (error) => {
+        console.error('Error al obtener el pronóstico:', error);
+        this.presentToast('No se pudo cargar el pronóstico.', 'danger');
+        this.proveedor3 = null;
+      }
+    });
   }
 
   toggleExpand() {
     this.isExpanded = !this.isExpanded;
-    if (this.isExpanded) {
-      // Obtener el pronóstico si la tarjeta se expande
-      this.foreCast();
+    if (this.isExpanded && !this.proveedor3) { 
+      this.ObtenerPronostico();
     }
   }
 
-  //funcion para que me salte una alerta cuando esta mal algun dato
-  async presentAlert(){
-    const alert =  await this.alert.create({
-      header: '',
-      message: '',
-      buttons: ['Entendido'],
-
+  async presentToast(message: string, color: string = 'primary') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'bottom'
     });
-      alert.present();
+    toast.present();
   }
+
+  // Si tenías otros métodos como geocoding, submitLocationX, etc. que usaban los proveedores antiguos,
+  // asegúrate de eliminarlos o refactorizarlos para usar openWeatherApiService si aún son necesarios.
 }

@@ -1,61 +1,158 @@
-
-import { Component, OnInit } from '@angular/core';
+// src/app/tab3/tab3.page.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AuthService, AuthenticatedUser } from '../services/authServices/auth.service';
+import { UserService, UserProfile } from '../services/userServices/user.services';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/authServices/auth.service'; // Ruta corregida a tu AuthService
-import { LoadingController, AlertController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page implements OnInit {
+export class Tab3Page implements OnInit, OnDestroy {
+  newDisplayName: string = '';
+  newFirstName: string | null = null;
+  newLastName: string | null = null;
+  newPhoneNumber: string | null = null;
+  // newProfilePictureUrl: string | null = null; // <-- ¡Ya no necesitamos esta variable en el TS si no la usas para mostrar!
+
+  userEmail: string | null = null;
+  currentProfile: UserProfile | null = null;
+  isFavoriteCitiesListExpanded: boolean = false;
+
+  private userProfileSubscription: Subscription | undefined;
+  private loadProfileSubscription: Subscription | undefined;
+  private authUserSubscription: Subscription | undefined;
+  private currentAuthUserId: string | null = null; // Añadido para el botón de demo de email
 
   constructor(
-    private authService: AuthService, // Inyección de tu AuthService para manejar la autenticación
-    private router: Router, // Inyección del Router para posibles navegaciones directas (aunque el AuthService ya las maneja)
-    private loadingController: LoadingController, // Para mostrar un indicador de carga durante el cierre de sesión
-    private alertController: AlertController // Para mostrar alertas al usuario en caso de error
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router,
+    private toastController: ToastController,
+    // private http: HttpClient // Descomentar si vas a añadir el botón de demo de email
   ) {}
 
   ngOnInit() {
-    // Aquí puedes añadir lógica de inicialización si la necesitas para esta pestaña.
-    // Por ejemplo, cargar datos del usuario si se muestran en la interfaz.
+    this.userProfileSubscription = this.userService.userProfile$.subscribe(profile => {
+      this.currentProfile = profile;
+      if (profile) {
+        this.newDisplayName = profile.displayName || '';
+        this.newFirstName = profile.firstName || null;
+        this.newLastName = profile.lastName || null;
+        this.newPhoneNumber = profile.phoneNumber || null;
+        // this.newProfilePictureUrl = profile.profilePictureUrl || null; // <-- ¡IGNORAR O ELIMINAR ESTA LÍNEA!
+      } else {
+        this.newDisplayName = '';
+        this.newFirstName = null;
+        this.newLastName = null;
+        this.newPhoneNumber = null;
+        // this.newProfilePictureUrl = null; // <-- ¡IGNORAR O ELIMINAR ESTA LÍNEA!
+        this.userEmail = null;
+      }
+    });
+
+    this.loadProfileSubscription = this.userService.loadUserProfile().subscribe({
+      next: (profile) => console.log('Perfil de usuario cargado en Tab3 OnInit'),
+      error: (error) => console.error('Error al cargar el perfil en Tab3 OnInit:', error)
+    });
+
+    this.authUserSubscription = this.authService.authenticatedUser$.subscribe(
+      (user: AuthenticatedUser | null) => {
+        this.userEmail = user?.email || null;
+        this.currentAuthUserId = user?.userId || null; // Guardar el userId de Cognito
+        console.log('Tab3: Email del usuario autenticado:', this.userEmail);
+      }
+    );
   }
 
-  /**
-   * Maneja el proceso de cierre de sesión del usuario.
-   * Muestra un spinner de carga y utiliza el AuthService para cerrar la sesión.
-   * El AuthService se encargará de comunicarse con Cognito y redirigir al usuario.
-   */
-  async logout() {
-    console.log('Tab3Page: Botón de Cerrar Sesión CLICKEADO.'); 
-    const loading = await this.loadingController.create({
-      message: 'Cerrando sesión...',
+  ngOnDestroy() {
+    this.userProfileSubscription?.unsubscribe();
+    this.loadProfileSubscription?.unsubscribe();
+    this.authUserSubscription?.unsubscribe();
+  }
+
+  async saveProfile() {
+    if (!this.currentProfile || this.currentProfile.userId === 'guest') {
+      await this.presentToast('No se puede guardar el perfil. Por favor, inicia sesión.', 'danger');
+      return;
+    }
+
+    const updatedProfileData: UserProfile = {
+      ...this.currentProfile,
+      displayName: this.newDisplayName,
+      firstName: this.newFirstName,
+      lastName: this.newLastName,
+      phoneNumber: this.newPhoneNumber,
+      // ELIMINAR CUALQUIER REFERENCIA A profilePictureUrl AQUÍ SI NO QUIERES QUE SE GUARDE
+      // Si la Lambda espera profilePictureUrl, asegúrate de que sea null en tu backend
+      // o ajusta tu Lambda para que no espere este campo si no lo envías.
+      // Para estar seguros, la eliminaremos si existe para que no se envíe.
+    };
+
+    // Asegúrate de que profilePictureUrl no se envíe en la actualización de perfil
+    if ('profilePictureUrl' in updatedProfileData) {
+      delete updatedProfileData.profilePictureUrl;
+    }
+
+    this.userService.updateUserProfile(updatedProfileData).subscribe({
+      next: async (response) => {
+        await this.presentToast('¡Perfil actualizado exitosamente!', 'success');
+      },
+      error: async (error) => {
+        console.error('Error al guardar el perfil:', error);
+        await this.presentToast('Error al guardar el perfil. Inténtalo de nuevo.', 'danger');
+      }
     });
-    await loading.present(); // Muestra el spinner de carga
+  }
 
+  async logout() {
     try {
-      // Llama al método userSignOut de tu AuthService.
-      // El AuthService ya tiene la lógica para llamar a Amplify.Auth.signOut()
-      // y, a través del Hub, redirigir al usuario a la página de inicio de sesión (/sign-in).
       await this.authService.logout();
-
-
-      // No es necesario añadir redirección aquí (ej. this.router.navigate(['/sign-in']))
-      // ni limpiar localStorage, ya que el AuthService (mediante el Hub) ya gestiona esto.
-
-    } catch (error: any) {
-      // Captura y loguea cualquier error que ocurra durante el cierre de sesión
+      this.router.navigateByUrl('/sign-in', { replaceUrl: true });
+      await this.presentToast('Sesión cerrada.', 'success');
+    } catch (error) {
       console.error('Error al cerrar sesión:', error);
-      const alert = await this.alertController.create({
-        header: 'Error al cerrar sesión',
-        message: 'No se pudo cerrar la sesión correctamente. Por favor, inténtalo de nuevo.',
-        buttons: ['OK'],
-      });
-      await alert.present(); // Muestra una alerta al usuario
-    } finally {
-      await loading.dismiss(); // Asegura que el spinner se oculte, incluso si hay un error
+      await this.presentToast('Error al cerrar sesión. Inténtalo de nuevo.', 'danger');
     }
   }
+
+  toggleFavoriteCitiesList() {
+    this.isFavoriteCitiesListExpanded = !this.isFavoriteCitiesListExpanded;
+  }
+
+  async presentToast(message: string, color: string = 'primary') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  // Si vas a añadir el botón de demo de email, descomentar y adaptar esta función
+  /*
+  async sendTestAlertEmail() {
+    if (!this.currentAuthUserId) {
+      await this.presentToast('No se puede enviar email de prueba: usuario no autenticado.', 'danger');
+      return;
+    }
+
+    const lambdaEndpointUrl = 'https://TU_ID_API_GATEWAY.execute-api.REGION.amazonaws.com/default/TU_NOMBRE_LAMBDA/send-test-email';
+
+    try {
+      await this.presentToast('Enviando email de prueba...', 'primary');
+      const response = await this.http.post(lambdaEndpointUrl, { userId: this.currentAuthUserId }).toPromise();
+      console.log('Test email response:', response);
+      await this.presentToast('¡Email de prueba enviado exitosamente! Revisa tu bandeja de entrada.', 'success');
+    } catch (error: any) {
+      console.error('Error al enviar email de prueba:', error);
+      const errorMessage = error.error?.message || 'Error desconocido al enviar email de prueba.';
+      await this.presentToast(`Error: ${errorMessage}`, 'danger');
+    }
+  }
+  */
 }
