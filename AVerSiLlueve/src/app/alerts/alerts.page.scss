@@ -1,0 +1,25 @@
+.alert-unread {
+  font-weight: bold;
+  background-color: var(--ion-color-light); // Un fondo ligeramente diferente
+  // Puedes añadir más estilos como un borde, un color de texto, etc.
+}
+
+// Estilos para centrar el spinner en la tarjeta de carga
+ion-card-content.ion-text-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px; // Ajusta según el tamaño deseado del spinner
+}
+
+.alert-100-percent {
+  --ion-item-background: #ffe0e0; // Fondo ligeramente rosado o rojo claro
+  border-left: 5px solid var(--ion-color-danger); // Borde rojo distintivo
+  margin-bottom: 8px; // Para separarlas un poco
+  ion-label {
+    color: var(--ion-color-dark); // Asegura buena legibilidad
+    h2 {
+        color: var(--ion-color-danger); // Título en rojo
+    }
+  }
+}

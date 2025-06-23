@@ -57,6 +57,10 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'tabs',
     pathMatch: 'full'
+  },
+  {
+    path: 'alerts',
+    loadChildren: () => import('./alerts/alerts.module').then( m => m.AlertsPageModule)
   }
 ];
 

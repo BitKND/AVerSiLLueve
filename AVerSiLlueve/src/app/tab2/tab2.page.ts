@@ -4,7 +4,6 @@ import { UserService, UserProfile } from '../services/userServices/user.services
 import { Subscription, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ToastController, AlertController } from '@ionic/angular';
-
 // Importa el nuevo servicio unificado
 import { OpenWeatherApiService } from '../services/proveedoresServices/open-weather-api.service'
 

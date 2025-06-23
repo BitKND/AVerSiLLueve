@@ -15,8 +15,8 @@ import { environment } from 'src/environments/environment';
 import { ProveedorClimaService } from '../app/services/proveedoresServices/proveedor-clima.service';
 import { Proveedor2ClimaService } from '../app/services/proveedoresServices/proveedor2-clima.service';
 import { Proveedor3ClimaService } from '../app/services/proveedoresServices/proveedor3-clima.service';
-
 import { HttpClientModule } from '@angular/common/http';
+
 
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../aws-config'; 

@@ -27,6 +27,10 @@ const routes: Routes = [
         loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
       },
       {
+        path: 'alerts', // Este será el path para la nueva pestaña
+        loadChildren: () => import('../alerts/alerts.module').then(m => m.AlertsPageModule)
+      },
+      {
         // Ruta por defecto para el grupo de pestañas.
         // Cuando se accede a '/tabs' sin una sub-ruta específica (ej. '/tabs'),
         // redirige automáticamente a 'tab1'. Es crucial que esta redirección sea RELATIVA

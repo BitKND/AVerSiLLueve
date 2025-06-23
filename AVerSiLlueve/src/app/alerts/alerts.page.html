@@ -1,0 +1,77 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Alertas de Lluvia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card *ngIf="isLoadingAlerts">
+    <ion-card-header>
+      <ion-card-title>Cargando Alertas...</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+      <ion-spinner name="crescent"></ion-spinner>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="errorMessage">
+    <ion-card-header>
+      <ion-card-title>Error</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="danger">{{ errorMessage }}</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!isLoadingAlerts && !errorMessage && alerts.length === 0">
+    <ion-card-header>
+      <ion-card-title>Sin Alertas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>No hay alertas de lluvia para mostrar en este momento.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list *ngIf="alerts.length > 0 && !isLoadingAlerts && !errorMessage">
+  <ion-item *ngFor="let alert of alerts"
+            [class.alert-unread]="!alert.read"
+            [class.alert-100-percent]="alert.probabilityOfPrecipitation === 1">
+
+    <ion-icon [name]="alert.probabilityOfPrecipitation === 1 ? 'thunderstorm-outline' : 'rainy-outline'" 
+          slot="start"
+          [color]="alert.probabilityOfPrecipitation === 1 ? 'danger' : 'primary'"></ion-icon> 
+              <ion-label>
+      <h2>
+        Alerta en {{ alert.city }} 
+        <span *ngIf="alert.forecastDateTime">
+          - Pronóstico para {{ alert.forecastDateTime | date:'shortTime' }}
+          ({{ alert.forecastDateTime | date:'dd/MM' }})
+        </span>
+      </h2>
+
+      <p class="ion-text-wrap">
+        <ion-text [color]="alert.probabilityOfPrecipitation >= 0.8 ? 'danger' : 'dark'">
+          <ng-container *ngIf="alert.probabilityOfPrecipitation === 1; else defaultMessage">
+            ¡ATENCIÓN! Se espera **100% de probabilidad de {{ getWeatherDescription(alert.message) || 'precipitación' }}**. Lleva paraguas o vas a volver hecho SOPA !!!.
+          </ng-container>
+          <ng-template #defaultMessage>
+            {{ (alert.probabilityOfPrecipitation * 100) | number:'1.0-0' }}% de probabilidad de 
+            {{ getWeatherDescription(alert.message) || 'precipitación' }}. 
+          </ng-template>
+        </ion-text>
+      </p>
+
+      <p class="ion-text-end ion-text-small ion-margin-top">
+        <small *ngIf="alert.alertGeneratedDateTime">Generada: {{ alert.alertGeneratedDateTime | date:'short' }}</small>
+        <ion-badge *ngIf="alert.probabilityOfPrecipitation === 1" color="danger" class="ion-margin-start">¡100%!</ion-badge>
+      </p>
+    </ion-label>
+
+    <ion-icon *ngIf="!alert.read" name="ellipse" color="danger" slot="end"></ion-icon>
+  </ion-item>
+</ion-list>
+</ion-content>
