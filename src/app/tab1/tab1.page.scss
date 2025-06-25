@@ -1,0 +1,155 @@
+ion-content{
+   --background: linear-gradient(180deg, #4A90E2 0%, #81C7F5 100%);
+}
+/* --- ESTILOS GENERALES Y FUENTES --- */
+h1, p {
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para legibilidad */
+}
+
+h1 {
+  font-size: 22px;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9); /* Blanco ligeramente transparente */
+}
+
+
+/* --- BARRA DE BÚSQUEDA --- */
+.barra-busq {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  width: 100%;
+  height: 45px; /* Un poco más alta */
+
+  /* Efecto Glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Para Safari */
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.custom-busq {
+  --padding-start: 0;
+  --background: transparent;
+  --color: white;
+  --placeholder-color: rgba(255, 255, 255, 0.7);
+  --placeholder-opacity: 1;
+}
+
+ion-icon {
+  color: #fff;
+}
+
+
+/* --- TARJETA DEL CLIMA PRINCIPAL --- */
+.weather-card {
+  color: white;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 395px;
+  width: 100%;
+  
+  /* Efecto Glassmorphism */
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* Para Safari */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  
+  /* Efecto al pasar el cursor */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.weather-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+}
+
+.weather-card .temp-col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.temp-container {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+}
+
+.temp-container h1 {
+  font-size: 52px; /* Más grande */
+  font-weight: 500;
+}
+
+.letra-color {
+  color: white !important;
+}
+
+
+/* --- CONTENEDOR DE PRONÓSTICO HORIZONTAL --- */
+.forecast-container {
+  margin-top: 20px;
+  padding: 15px 10px;
+  border-radius: 15px;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  /* Efecto Glassmorphism */
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); /* Para Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  /* Ocultar la barra de scroll estándar */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE y Edge */
+}
+
+/* Ocultar la barra de scroll para Chrome, Safari y Opera */
+.forecast-container::-webkit-scrollbar {
+  display: none;
+}
+
+.forecast-item {
+  display: inline-block;
+  margin-right: 15px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 12px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.forecast-item:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Resaltado al pasar el mouse */
+  transform: scale(1.05);
+}
+
+.forecast-item:last-child {
+  margin-right: 0;
+}
+
+.forecast-item img {
+  width: 40px;
+  height: 40px;
+}
+
+.forecast-item p {
+  font-size: 14px;
+  color: #fff;
+  margin: 5px 0;
+}
+
+.forecast-item .forecast-temp {
+  font-size: 16px;
+  color: #fff;
+  font-weight: bold;
+}

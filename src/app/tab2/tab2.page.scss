@@ -1,0 +1,43 @@
+.custom-header {
+    --background: #000000;
+    color: #ffffff;
+  }
+  
+  .custom-title {
+    color: #000000;
+  }
+  
+  .custom-list {
+    margin: 1rem;
+    background-color: #64647a;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-item {
+    --background: #64647a;
+    border-bottom: 1px solid #64647a;
+    margin: 0.5rem 0;
+    border-radius: 5px;
+  }
+  
+  .custom-label h2 {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin: 0;
+  }
+  
+  .custom-label p {
+    font-size: 0.9rem;
+    color: #bbb7b7;
+  }
+  
+  .custom-button {
+    --background: #f44336;
+    color: #ffffff;
+  }
+  
+  .custom-button ion-icon {
+    font-size: 1.2rem;
+  }
+  

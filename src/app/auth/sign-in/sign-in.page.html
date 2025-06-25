@@ -1,0 +1,57 @@
+<ion-content [fullscreen]="true">
+  <div class="flex-center">
+    <ion-card color="light">
+      <div class="ion-text-center ion-padding">
+        <img src="../../../assets/icon/iconlogin.png" alt="Logo de la aplicación" width="50%">
+      </div>
+
+      <ion-card-header>
+        <ion-card-title color="primary">Bienvenidos a AverSiLlueve App</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="loginForm" novalidate>
+          <ion-row>
+            <ion-col>
+              <ion-input formControlName="email" label="Email" labelPlacement="floating" placeholder="Ingrese mail" fill="outline" type="email"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <div *ngIf="errorControl['email'].touched && errorControl['email'].invalid">
+            <ion-text color="danger" *ngIf="errorControl['email'].errors?.['required']">
+              Email requerido.
+            </ion-text>
+            <ion-text color="danger" *ngIf="errorControl['email'].errors?.['email'] || errorControl['email'].errors?.['pattern']">
+              El email debe ser válido.
+            </ion-text>
+          </div>
+
+          <ion-row>
+            <ion-col>
+              <ion-input formControlName="password" label="Contraseña" labelPlacement="floating" placeholder="Ingrese contraseña" fill="outline" type="password"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <div *ngIf="errorControl['password'].touched && errorControl['password'].invalid">
+            <ion-text color="danger" *ngIf="errorControl['password'].errors?.['required']">
+              Contraseña requerida.
+            </ion-text>
+            <ion-text color="danger" *ngIf="errorControl['password'].errors?.['minlength']">
+              La contraseña debe tener al menos 8 caracteres.
+            </ion-text>
+            </div>
+
+          <ion-button color="dark" [routerLink]="['/reset-password']" fill="clear" size="full">¿Olvidaste tu contraseña?</ion-button>
+
+          <ion-button (click)="login()" [disabled]="!loginForm.valid" color="primary" expand="block"> Ingresar </ion-button>
+
+          <button type="button" class="google-sign-in-button" (click)="loginGoogle()">Ingresar con Google</button>
+
+          <ion-button color="dark" [routerLink]="['/sign-up']" fill="clear" expand="block">¿No tienes una cuenta? Regístrate aquí</ion-button>
+
+        </form>
+      </ion-card-content>
+
+    </ion-card>
+  </div>
+</ion-content>

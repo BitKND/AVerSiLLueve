@@ -1,0 +1,7 @@
+{
+  "name": "AVerSiLlueve",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
