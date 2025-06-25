@@ -1,7 +1,7 @@
 // src/app/services/authServices/auth.service.ts
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, from, Observable } from 'rxjs'; // Importar 'from' y 'Observable'
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import {
   signUp,
   signIn,
@@ -12,7 +12,8 @@ import {
   resendSignUpCode,
   resetPassword,
   confirmResetPassword,
-  fetchUserAttributes // ¡Importar esto!
+  fetchUserAttributes,
+  signInWithRedirect 
 } from 'aws-amplify/auth';
 import { Hub } from 'aws-amplify/utils';
 
@@ -166,6 +167,17 @@ export class AuthService {
     return confirmResetPassword({ username: username, confirmationCode: confirmationCode, newPassword: newPassword });
   }
 
-  // Este método ya no es necesario si usamos el observable authenticatedUser$
-  // async getCurrentUserAuthInfo(): Promise<{ userId: string | null, email: string | null }> { ... }
+  async loginWithGoogle(): Promise<void> {
+    try {
+
+      await signInWithRedirect({ provider: 'Google' });
+
+    } catch (error) {
+      console.error('AuthService: Error al iniciar sesión con Google:', error);
+   
+      throw error; 
+    }
+  }
+
+  
 }

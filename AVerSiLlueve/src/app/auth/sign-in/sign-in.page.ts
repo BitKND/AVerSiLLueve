@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController, AlertController, NavController } from '@ionic/angular';
 
 // Importa tu AuthService unificado para interactuar con AWS Amplify Auth
-import { AuthService } from  'src/app/services/authServices/auth.service';
+import { AuthService } from 'src/app/services/authServices/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -55,14 +55,7 @@ export class SignInPage implements OnInit {
    * La integración de Google Sign-In con Amplify/Cognito requiere configuración adicional (proveedor de identidad).
    * Por ahora, solo muestra un mensaje informativo.
    */
-  async loginGoogle() {
-    const alert = await this.alertCtrl.create({
-      header: 'Google Sign-In',
-      message: 'La integración de Google Sign-In con AWS Amplify/Cognito requiere configuración adicional en la consola de AWS (proveedores de identidad). Esta funcionalidad está deshabilitada temporalmente.',
-      buttons: ['Entendido'],
-    });
-    await alert.present();
-  }
+  
 
   /**
    * Muestra una alerta Ionic personalizada al usuario.
@@ -143,5 +136,16 @@ export class SignInPage implements OnInit {
    */
   goToResetPassword() {
     this.router.navigateByUrl('/reset-password');
+  }
+
+  async loginGoogle() {
+    try {
+      await this.authService.loginWithGoogle();
+      // No necesitas redirigir aquí; tu Hub listener en AuthService lo hará automáticamente.
+      // El flujo de signInWithRedirect causará una redirección a Google y luego de vuelta a tu app.
+    } catch (error) {
+      console.error('Error al intentar iniciar sesión con Google desde el componente:', error);
+      // Aquí puedes mostrar un mensaje al usuario, por ejemplo, con un ToastController de Ionic.
+    }
   }
 }

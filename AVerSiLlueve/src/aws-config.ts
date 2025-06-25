@@ -1,10 +1,26 @@
 const awsmobile = {
-    "aws_project_region": "us-east-1", 
-    "aws_cognito_identity_pool_id": "", 
-    "aws_cognito_region": "us-east-1", 
-    "aws_user_pools_id": "us-east-1_ixCqGSNXm", 
-    "aws_user_pools_web_client_id": "4uv7ebia7tuo9o3pfvbne26g4m", 
-    "oauth": {},
+    "aws_project_region": "us-east-1",
+    "aws_cognito_identity_pool_id": "",
+    "aws_cognito_region": "us-east-1",
+    "aws_user_pools_id": "us-east-1_ixCqGSNXm",
+    "aws_user_pools_web_client_id": "4uv7ebia7tuo9o3pfvbne26g4m",
+    "oauth": {
+        "domain": "https://us-east-1ixcqgsnxm.auth.us-east-1.amazoncognito.com",
+        "scope": [
+            "phone",
+            "email",
+            "openid",
+            "profile",
+            "aws.cognito.signin.user.admin"
+        ],
+        // **IMPORTANTE**: Asegúrate de que estas URLs coincidan con las configuradas en Cognito App Client y Capacitor/Cordova
+        "redirectSignIn": "http://localhost:8100/tabs/tab1", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
+        //"redirectSignOut": "http://localhost:8100/login/,com.yourapp.id://oauthredirect", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
+        "responseType": "code" // O "token"
+
+    },
+    "federationTarget": "COGNITO_USER_POOLS",
+
     "aws_cognito_username_attributes": [
         "EMAIL"
     ],
