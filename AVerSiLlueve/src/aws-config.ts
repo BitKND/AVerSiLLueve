@@ -14,7 +14,7 @@ const awsmobile = {
             "aws.cognito.signin.user.admin"
         ],
         // **IMPORTANTE**: Asegúrate de que estas URLs coincidan con las configuradas en Cognito App Client y Capacitor/Cordova
-        "redirectSignIn": "http://localhost:8100/tabs/tab1", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
+        "redirectSignIn": "https://develop.d4hgz4e1toor4.amplifyapp.com/tabs/tab1", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
         //"redirectSignOut": "http://localhost:8100/login/,com.yourapp.id://oauthredirect", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
         "responseType": "code" // O "token"
 
