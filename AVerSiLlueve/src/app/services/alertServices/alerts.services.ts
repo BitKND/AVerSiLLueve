@@ -21,7 +21,7 @@ export interface UserAlert {
   providedIn: 'root'
 })
 export class AlertsService {
-  private apiUrl = 'https://kn2cz0a0k8.execute-api.us-east-1.amazonaws.com/dev'; // Asegúrate de que esta URL sea correcta
+  private apiUrl = 'https://gj5q3ulwi8.execute-api.us-east-1.amazonaws.com/dev'; // Asegúrate de que esta URL sea correcta
 
   // **NUEVO: BehaviorSubject para mantener el estado de las alertas**
   private _userAlerts = new BehaviorSubject<UserAlert[]>([]);
