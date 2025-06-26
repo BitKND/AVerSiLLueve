@@ -5,7 +5,7 @@ const awsmobile = {
     "aws_user_pools_id": "us-east-1_k6Yq4imqY",
     "aws_user_pools_web_client_id": "77p5abnso665b0vlfnlp2t8gg1",
     "oauth": {
-        "domain": "https://us-east-1k6yq4imqy.auth.us-east-1.amazoncognito.com",
+        "domain": "https://us-east-1k6yq4imqy.auth.us-east-1.amazoncognito.com", 
         "scope": [
             "phone",
             "email",
@@ -14,7 +14,7 @@ const awsmobile = {
             "aws.cognito.signin.user.admin"
         ],
         // **IMPORTANTE**: Asegúrate de que estas URLs coincidan con las configuradas en Cognito App Client y Capacitor/Cordova
-        "redirectSignIn": "https://develop.d4hgz4e1toor4.amplifyapp.com/tabs/tab1", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
+        "redirectSignIn": "https://develop.d4hgz4e1toor4.amplifyapp.com/auth", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
         //"redirectSignOut": "http://localhost:8100/login/,com.yourapp.id://oauthredirect", // Añade tus URLs de redirección de Ionic/Capacitor/Cordova aquí
         "responseType": "code" // O "token"
 
